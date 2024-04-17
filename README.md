@@ -35,6 +35,7 @@ Now navigate to the local repository's main project folder and run these command
 The last command should do nothing since the **main.cpp** file in the template just returns 0. So you are good to go!
 
 ## For Windows
+### Visual Studio
 Make sure your system has the **necessary drivers** for your graphics card. As well you will need these **dependencies** for the project:
 - CMake: To download and install click [here](https://cmake.org/download/):
 - Visual Studio (or text editor of your choice): To download and install VS click [here](https://visualstudio.microsoft.com/vs/community/):
@@ -52,6 +53,19 @@ Wait for CMake, once it's ready, you can click the dropdown for **Build** and se
 </p>
 
 Awesome! Now you should have everything you need to start your project! Check to make sure you can use the dependencies in the **main.cpp** file!
+
+### Visual Studio Code
+- **Install Visual Studio Code**: If you haven't already, download and install Visual Studio Code from its [official website](https://code.visualstudio.com/).
+
+- **Install CMake Tools extension**: Open Visual Studio Code, go to the Extensions view by clicking on the square icon on the sidebar or pressing `Ctrl+Shift+X`, then search for "CMake Tools" and install it.
+
+- **Open your project folder in Visual Studio Code**: Open Visual Studio Code and either create a new folder for your project or open an existing one where your CMakeLists.txt file resides.
+
+- **Install C++ extension (optional)**: If you haven't already, you might want to install the C++ extension for Visual Studio Code to get C++ language support. You can find it in the Extensions view as well.
+
+- **Configure CMake Tools**: Once you have your project open in Visual Studio Code, press `Ctrl+Shift+P` to open the command palette, type "CMake: Quick Start" and select it. Follow the prompts to set up your project. You'll need to specify the source directory (where your CMakeLists.txt is located) and the build directory (where your build files will be generated).
+
+- **Build your project**: After configuring CMake Tools, you should see the CMake extension appear in the bottom status bar. Click on it and select "Configure" to configure your project, then select "Build" to build it.
 
 # Creating a Window
 
