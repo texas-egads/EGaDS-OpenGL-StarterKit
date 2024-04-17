@@ -24,9 +24,7 @@ add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})
 # We need a CMAKE_DIR with some code to find external dependencies
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
-#######################################
-# LOOK for the packages that we need! #
-#######################################
+# Look for the packages that we need! #
 
 # OpenGL
 set(OpenGL_GL_PREFERENCE GLVND)
