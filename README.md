@@ -65,7 +65,7 @@ We can first start by including **GLFW** at the top of our **main.cpp** file and
 ```
 For those unfamiliar with C++ include formatting, 
 - `#include <filename>` makes the preprocessor search in an implementation-defined manner, normally in directories predefined by the compiler. It's usually used for items that are in the standard library and other header files associated with the target platform. 
-- `#include "filename"` also makes the preprocessor search in an implementation-defined manner, but one that is normally used to include our own header files and third-party libraries. Which in this case, is **GLFW**
+- `#include "filename"` also makes the preprocessor search in an implementation-defined manner, but it is normally used to include our own header files and third-party libraries. Which in this case, is **GLFW**
 
 Once that's settled, the first thing we need to do is initialize **GLFW** so we can properly use its functionality! 
 ```cpp
