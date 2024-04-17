@@ -38,11 +38,14 @@ Make sure your system has the **necessary drivers** for your graphics card. As w
 - CMake: To download and install click [here](https://cmake.org/download/):
 - Visual Studio (or text editor of your choice): To download and install VS click [here](https://visualstudio.microsoft.com/vs/community/):
 
-If you're using Visual Studio, open it and select **Open a Local Folder", and navigate to the local repository's main project folder. Wait for CMake, once it's ready, you can click the dropdown for **Build** and select **Build EGaDS-OpenGL-StarterKit.exe**. You can also run it by selecting the green arrow.
+If you're using Visual Studio, open it and select **Open a Local Folder", and navigate to the local repository's main project folder. 
+
 <p align="center">
   <img src="images/1/VS-Setup.png" alt="VS Setup"/>
 </p>
 
-<div style="text-align:center;">
-  <img src="images/1/VS-Setup.png" alt="VS Setup" style="display:block; margin-left:auto; margin-right:auto;">
-</div>
+Wait for CMake, once it's ready, you can click the dropdown for **Build** and select **Build EGaDS-OpenGL-StarterKit.exe**.
+
+<p align="center">
+  <img src="images/1/VS-Build.png" alt="VS Build"/>
+</p>
