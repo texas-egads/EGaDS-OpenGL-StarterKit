@@ -36,7 +36,7 @@ The last command should do nothing since the **main.cpp** file in the template j
 ## For Windows
 Make sure your system has the **necessary drivers** for your graphics card. As well you will need these **dependencies** for the project:
 - CMake: To download and install click [here](https://cmake.org/download/):
-- Visual Studio (or IDE of your choice): To download and install VS click [here](https://visualstudio.microsoft.com/vs/community/):
+- Visual Studio (or text editor of your choice): To download and install VS click [here](https://visualstudio.microsoft.com/vs/community/):
 
 Now navigate to the local repository's main project folder and run these commands to **build** the project.
 ```
