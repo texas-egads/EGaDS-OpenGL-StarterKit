@@ -1,11 +1,5 @@
 # EGaDS! Super Simple OpenGL CMake Kit
 
-Hey everyone! This is going to be a very simple way of setting up a basic 3D application using C++ and OpenGL. This should give you a quick start in basic computer graphics concepts and allow you to start making cool games/projects using these concepts!
-
-## Installation
-
-In this step we're goign to# EGaDS! Super Simple OpenGL CMake Kit
-
 Hey everyone! This is going to be a very simple way of setting up a basic 3D application using **C++** and **OpenGL**. This should give you a quick start in basic computer graphics concepts and allow you to start making cool games/projects using these concepts!
 
 # Installation & Setup
@@ -17,13 +11,14 @@ Start by cloning this repository using the below command and follow the instruct
 ```
 git clone https://github.com/texas-egads/EGaDS-OpenGL-StarterKit.git
 ```
+> **Note:** Support for **Mac** builds is coming soon, for now it is not supported.
 
 ## For Linux
 Make sure your system has the **necessary drivers** for your graphics card. Installation instructions for those depend on your distribution. Also make sure you have a **C/C++ compiler**. You can verify this by doing a check to see if you can see the compiler information.
 ```
 g++ --version
 ```
-Next you want to install some **dependencies** on your system, use the below commands to install those 3rd party libraries!
+Next you want to install some **dependencies** on your system, use the below commands to install those third-party libraries!
 ```
 sudo apt update
 sudo apt install -y build-essential cmake mesa-common-dev mesa-utils freeglut3-dev libassimp-dev
@@ -37,3 +32,16 @@ Now navigate to the local repository's main project folder and run these command
   ./EGaDS-OpenGL-StarterKit
 ```
 The last command should do nothing since the **main.cpp** file in the template just returns 0. So you are good to go!
+
+## For Windows
+Make sure your system has the **necessary drivers** for your graphics card. As well you will need these **dependencies** for the project:
+- CMake: To download and install click [here](https://cmake.org/download/):
+- Visual Studio (or IDE of your choice): To download and install VS click [here](https://visualstudio.microsoft.com/vs/community/):
+
+Now navigate to the local repository's main project folder and run these commands to **build** the project.
+```
+  mkdir build
+  cd build
+  cmake -A Win32 ..
+```
+> **Note:** The project needs to be set up for **Win32** configuration because it relies on precompiled **x86** binaries of third-party libraries. This setup is suitable for users on **Win32** systems. If you're using an **x64** operating system, you may want to later switch your project's configuration to **x64** and obtain the appropriate third-party libraries for compatibility. The current setup should still work, however.
