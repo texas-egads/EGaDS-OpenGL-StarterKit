@@ -55,7 +55,7 @@ Awesome! Now you should have everything you need to start your project! Check to
 
 # Creating a Window
 
-Now that we have our project ready to go let's start by creating a window. For that, we will be using the **GLFW** library.
+Now that we have our project ready to go, let's start by creating a window. For that, we will be using the **GLFW** library.
 
 ## Setting up GLFW
 We can first start by including **GLFW** at the top of our **main.cpp** file and let's include **iostream** as well!
@@ -71,17 +71,17 @@ Once that's settled, the first thing we need to do is initialize **GLFW** so we 
 ```cpp
 glfwInit();
 ```
-So how **GLFW** works is it creates an **OpenGL** context, but we need to provide it with some information. This done using **Window Hints** Let's give it some!
+So how **GLFW** works is it creates an **OpenGL** context, but we need to provide it with some information. This done using **Window Hints**. Let's give it some!
 ```cpp
 glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 ```
-What this does is provide the version of our **GLFW** context and specify our **OpenGL** context. Now what we can do is create a **GLFWwindow*** pointer for our window!
+What we are doing here is providing the version of our **GLFW** context and specifying our **OpenGL** context. From here let's create a **GLFWwindow*** pointer for our window!
 ```cpp
 GLFWwindow* window = glfwCreateWindow(800, 800, "EGaDS OpenGL Starter Kit", NULL, NULL);
 ```
-`glfwCreateWindow()` Takes in several parameters that define your typical application window. You might be familiar with some of these settings in your everyday desktop application use!
+`glfwCreateWindow()` Takes in several parameters that define your typical application window. You might be familiar with some of these settings in your everyday use of desktop applications!
 - **Width**: This specifies the width of the window in pixels.
 
 - **Height**: This specifies the height of the window in pixels.
@@ -92,7 +92,7 @@ GLFWwindow* window = glfwCreateWindow(800, 800, "EGaDS OpenGL Starter Kit", NULL
 
 - **Share**: This specifies the context to share resources with. You can pass the context of another window if you are sharing resources. For our purposes, this isn't important, so we pass `NULL`.
 
-After this, we can add a bit of error logging and just print a little message if something goes wrong when creating the window and terminate if that happens. 
+After this, we can add a bit of error logging and just print a little message to tell us if something goes wrong when creating the window. If that does happen, we can terminate **GLFW**.
 ```cpp
 if (window == NULL) {
 	std::cout << "Error creating window" << std::endl;
@@ -100,12 +100,12 @@ if (window == NULL) {
 }
 ```
 
-Now in order to actually use the window we just created, we can use `glfwMakeContextCurrent` and pass in our **GLFWwindow** pointer. This introduces the window object to the current context in **OpenGL**
+Now, in order to actually use the window we just created, we can use `glfwMakeContextCurrent()` and pass in our **GLFWwindow** pointer. This introduces the window object to the current context in **OpenGL**
 ```cpp
 glfwMakeContextCurrent(window);
 ```
 
-Then at the end of our application we destroy our window and terminate **GLFW**. This just cleans things up!
+Then at the end of our application, we can destroy our window and terminate **GLFW**. This just cleans things up!
 ```cpp
 glfwDestroyWindow(window);
 glfwTerminate();
@@ -136,6 +136,6 @@ int main(void) {
 }
 ```
 
-Now we can run our first window! If you have really good eyes, you might notice a window pop up for just a fraction of a second and immediately disappear! This is expected, so don't worry!
+Let's run our first window! If you have really good eyes, you might notice a window pop up for just a fraction of a second and immediately disappear! This is expected, so don't worry!
 
 The reason this happens is because as soon as the window is created. We destroy it and terminate the program. This is why we will need a loop to keep our window open and running!
