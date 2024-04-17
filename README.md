@@ -40,4 +40,6 @@ Make sure your system has the **necessary drivers** for your graphics card. As w
 
 If you're using Visual Studio, open it and select **Open a Local Folder", and navigate to the local repository's main project folder. Wait for CMake, once it's ready, you can click the dropdown for **Build** and select **Build EGaDS-OpenGL-StarterKit.exe**. You can also run it by selecting the green arrow.
 
-![Kiku](images/1/VS-Setup.png)
+<div style="text-align:center;">
+  <img src="images/1/VS-Setup.png" alt="VS Setup 1" style="display:inline-block;">
+</div>
