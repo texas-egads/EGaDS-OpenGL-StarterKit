@@ -44,6 +44,8 @@ If you're using Visual Studio, open it and select **Open a Local Folder**, and n
   <img src="images/1/VS-Setup.png" alt="VS Setup"/>
 </p>
 
+Awesome! Now you should have everything you need to start your project! Check to make sure you can use the dependencies in the **main.cpp** file!
+
 Wait for CMake, once it's ready, you can click the dropdown for **Build** and select **Build EGaDS-OpenGL-StarterKit.exe**.
 
 <p align="center">
