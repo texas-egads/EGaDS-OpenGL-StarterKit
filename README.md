@@ -63,6 +63,11 @@ The last command should do nothing since the **main.cpp** file in the template j
 
 - **Build your project**: After configuring CMake Tools, you should see the CMake extension appear in the bottom status bar. Click on it and select "Configure" to configure your project, then select "Build" to build it.
 
+Cool! Now you should fully be able to build and run your application! At it's current state it should do nothing since all it does is return `0` in **main.cpp**
+<p align="center">
+  <img src="images/1/Final-Setup.png" alt="Final Setup"/>
+</p>
+
 # Creating a Window
 
 Now that we have our project ready to go, let's start by creating a window. For that, we will be using the **GLFW** library.
