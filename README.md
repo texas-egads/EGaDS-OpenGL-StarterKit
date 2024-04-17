@@ -138,9 +138,8 @@ int main(void) {
 
 Let's run our first window! If you have really good eyes, you might notice a window pop up for just a fraction of a second and immediately disappear! This is expected, so don't worry!
 
-The reason this happens is because as soon as the window is created. We destroy it and terminate the program. This is why we will need a loop to keep our window open and running!
-
-
 <p align="center">
   <img src="images/2/Create-Window-Flash.gif" alt="Create Window Flash"/>
 </p>
+
+The reason this happens is because as soon as the window is created. We destroy it and terminate the program. This is why we will need a loop to keep our window open and running!
