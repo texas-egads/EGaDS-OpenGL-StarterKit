@@ -66,7 +66,7 @@ The last command should do nothing since the **main.cpp** file in the template j
 Cool! Now you should fully be able to build and run your application! At it's current state it should do nothing since all it does is return `0` in **main.cpp**
 
 <p align="center">
-  <img src="images/1/Final-Setup.png" alt="Final Setup" width="690" height="auto"/>
+  <img src="images/1/Final-Setup.png" alt="Final Setup" width="500" height="auto"/>
 </p>
 
 # Creating a Window
@@ -155,7 +155,7 @@ int main(void) {
 Let's run our first window! If you have really good eyes, you might notice a window pop up for just a fraction of a second and immediately disappear! This is expected, so don't worry!
 
 <p align="center">
-  <img src="images/2/Create-Window-Flash.gif" alt="Create Window Flash" width="690" height="auto"/>
+  <img src="images/2/Create-Window-Flash.gif" alt="Create Window Flash" width="500" height="auto"/>
 </p>
 
 The reason this happens is because as soon as the window is created. We destroy it and terminate the program. This is why we will need a loop to keep our window open and running!
