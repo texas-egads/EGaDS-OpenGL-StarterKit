@@ -38,10 +38,5 @@ Make sure your system has the **necessary drivers** for your graphics card. As w
 - CMake: To download and install click [here](https://cmake.org/download/):
 - Visual Studio (or text editor of your choice): To download and install VS click [here](https://visualstudio.microsoft.com/vs/community/):
 
-Now navigate to the local repository's main project folder and run these commands to **build** the project.
-```
-  mkdir build
-  cd build
-  cmake -A Win32 ..
-```
-> **Note:** The project needs to be set up for **Win32** configuration because it relies on precompiled **x86** binaries of third-party libraries. This setup is suitable for users on **Win32** systems. If you're using an **x64** operating system, you may want to later switch your project's configuration to **x64** and obtain the appropriate third-party libraries for compatibility. The current setup should still work, however.
+If you're using Visual Studio, open it and select **Open a Local Folder", and navigate to the local repository's main project folder. Wait for CMake, once it's ready, you can click the dropdown for **Build** and select **Build EGaDS-OpenGL-StarterKit.exe**. You can also run it by selecting the green arrow.
+
