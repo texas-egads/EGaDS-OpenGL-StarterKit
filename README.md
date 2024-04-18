@@ -29,7 +29,7 @@ Now navigate to the local repository's main project folder and run these command
   mkdir build
   cd build
   cmake ..
-  make -j4
+  make
   ./EGaDS-OpenGL-StarterKit
 ```
 The last command should do nothing since the **main.cpp** file in the template just returns 0. So you are good to go!
