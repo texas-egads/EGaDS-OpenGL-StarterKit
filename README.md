@@ -169,3 +169,18 @@ while (!glfwWindowShouldClose(window)) {
 <p align="center">
   <img src="images/2/Create-Window-Show.png" alt="Create Window Flash" width="500" height="auto"/>
 </p>
+
+Now this window is a little boring, so let's apply a bit of color to it! First we will set up our OpenGL viewport to match the size of the GLFW window. In this case, that is `800` by `800`!
+```cpp
+glViewport(0, 0, 800, 800);
+```
+Then We can define the OpenGL clear color. This is the color uses to clear the screen when we clear the buffer bit. I'm going to choose some random rgb values, but feel free to pick whatever color you enjoy!
+```cpp
+glClearColor(0.07f, 0.28f, 0.55f, 1.0f);
+```
+Now that we set the color, we can clear the OpenGL color buffer. This is the call that clears our window with our specified color!
+```cpp
+glClear(GL_COLOR_BUFFER_BIT);
+```
+
+Lastly we need to instruct OpenGL to swap the front and back buffers, and to understand this we need to talk a bit about how our graphics are rendered to the screen!
