@@ -167,20 +167,84 @@ while (!glfwWindowShouldClose(window)) {
 }
 ```
 <p align="center">
-  <img src="images/2/Create-Window-Show.png" alt="Create Window Flash" width="500" height="auto"/>
+  <img src="images/2/Create-Window-Show.png" alt="Create Window Show" width="500" height="auto"/>
 </p>
 
-Now this window is a little boring, so let's apply a bit of color to it! First we will set up our OpenGL viewport to match the size of the GLFW window. In this case, that is `800` by `800`!
+Now this window is a little boring, so let's apply a bit of color to it! First we will set up our **OpenGL** viewport to match the size of the **GLFW** window. In this case, that is `800` by `800`!
 ```cpp
 glViewport(0, 0, 800, 800);
 ```
-Then We can define the OpenGL clear color. This is the color uses to clear the screen when we clear the buffer bit. I'm going to choose some random rgb values, but feel free to pick whatever color you enjoy!
+Then We can define the **OpenGL** clear color. This is the color uses to clear the screen when we clear the buffer bit. I'm going to choose some random rgb values, but feel free to pick whatever color you enjoy!
 ```cpp
 glClearColor(0.07f, 0.28f, 0.55f, 1.0f);
 ```
-Now that we set the color, we can clear the OpenGL color buffer. This is the call that clears our window with our specified color!
+Now that we set the color, we can clear the **OpenGL** color buffer. This is the call that clears our window with our specified color!
 ```cpp
 glClear(GL_COLOR_BUFFER_BIT);
 ```
 
-Lastly we need to instruct OpenGL to swap the front and back buffers, and to understand this we need to talk a bit about how our graphics are rendered to the screen!
+Lastly we need to instruct **OpenGL** to swap the front and back buffers, and to understand this we need to talk a bit about how our graphics are rendered to the screen!
+
+So how screens display our game is it renders images really fast to give us the illusion of motion. These images are called frames and are constantly being drawn.
+
+<p align="center">
+  <img src="images/2/Frame-Buffer.png" alt="Frame" width="500" height="auto"/>
+</p>
+
+While loading the pixels from the current frame to the screen, the next frame is being drawn in the background and being prepared to load to the screen as the next frame. These frames are stored in things called buffers. As you can see below, the back buffer is drawing the next frame while the front buffer is displaying the current frame on the window.
+
+<p align="center">
+  <img src="images/2/Window-Buffer-1.png" alt="Window Buffering 1" width="500" height="auto"/>
+</p>
+
+A while later, a swap buffer call is made and the 2 buffers switch jobs and now the formerly back buffer becomes the front buffer, and vice versa. The previous frame is now being overwritten with new information to prepare for the following frame. This process is constantly repeated and is called **buffer swapping**
+
+<p align="center">
+  <img src="images/2/Window-Buffer-2.png" alt="Window Buffering 2" width="500" height="auto"/>
+</p>
+
+So let's implement this buffer swapping in our C++ application! **OpenGL** actually makes this really simple!
+```cpp
+glfwSwapBuffers(window);
+```
+
+Our resulting **main.cpp** file should now look like this!
+```cpp
+#include<iostream>
+#include<GLFW/glfw3.h>
+
+int main(void) {
+	glfwInit();
+
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+	GLFWwindow* window = glfwCreateWindow(800, 800, "EGaDS OpenGL Starter Kit", NULL, NULL);
+	if (window == NULL) {
+		std::cout << "Error creating window" << std::endl;
+		glfwTerminate();
+	}
+	
+	glfwMakeContextCurrent(window);
+
+  glViewport(0, 0, 800, 800);
+  glClearColor(0.07f, 0.28f, 0.55f, 1.0f);
+  glClear(GL_COLOR_BUFFER_BIT);
+  glfwSwapBuffers(window);
+
+  while (!glfwWindowShouldClose(window)) {
+    glfwPollEvents();
+  }
+
+	glfwDestroyWindow(window);
+	glfwTerminate();
+	return 0;
+}
+```
+
+Awesome! Now if we compile and run this with CMake, we should have a nicely-colored window!
+
+<p align="center">
+  <img src="images/2/Final-Window.png" alt="Final Window" width="500" height="auto"/>
+</p>
