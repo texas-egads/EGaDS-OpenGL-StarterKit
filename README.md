@@ -159,3 +159,13 @@ Let's run our first window! If you have really good eyes, you might notice a win
 </p>
 
 The reason this happens is because as soon as the window is created. We destroy it and terminate the program. This is why we will need a loop to keep our window open and running!
+
+So let's fix that! We can add a while loop at the end of our setup that will check if the window should close, and poll for any additional events triggered by the user.
+```cpp
+while (!glfwWindowShouldClose(window)) {
+    glfwPollEvents();
+}
+```
+<p align="center">
+  <img src="images/2/Create-Window-Running.png" alt="Create Window Flash" width="500" height="auto"/>
+</p>
