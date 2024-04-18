@@ -167,5 +167,5 @@ while (!glfwWindowShouldClose(window)) {
 }
 ```
 <p align="center">
-  <img src="images/2/Create-Window-Running.png" alt="Create Window Flash" width="500" height="auto"/>
+  <img src="images/2/Create-Window-Show.png" alt="Create Window Flash" width="500" height="auto"/>
 </p>
