@@ -262,30 +262,30 @@ So the OpenGL graphics pipeline consists of several steps that essentially takes
 The first phase of the graphics pipeline is the **vertex shader**. This takes the positions of all the vertices and transforms them, giving you inidividual points.
 
 <p align="center">
-  <img src="images/2/Triangle-Graphics-1.png" alt="Triangle Graphics 1" width="500" height="auto"/>
+  <img src="images/3/Triangle-Graphics-1.png" alt="Triangle Graphics 1" width="500" height="auto"/>
 </p>
 
 This position data is then passed to the **shape assembler**, which will take those points and connect them based on the primitive type. A triangle primitive shape assembler would connect 3 points to form a trangle.
 
 <p align="center">
-  <img src="images/2/Triangle-Graphics-2.png" alt="Triangle Graphics 2" width="500" height="auto"/>
+  <img src="images/3/Triangle-Graphics-2.png" alt="Triangle Graphics 2" width="500" height="auto"/>
 </p>
 
 Next, we have the **geometry shader**, which can add vertices and create new primitives out of existing primitives. Don't worry, this isn't really important for now!
 
 <p align="center">
-  <img src="images/2/Triangle-Graphics-3.png" alt="Triangle Graphics 3" width="500" height="auto"/>
+  <img src="images/3/Triangle-Graphics-3.png" alt="Triangle Graphics 3" width="500" height="auto"/>
 </p>
 
 After our core geometry is laid out, we can enter the **rasterization** step. This turns our neat geometry into a series of pixels that approximates our shape. (Excuse my poor drawing, it's harder than it looks!) As you can see the the diagram below, the boxes represent the pixelated version of the triangle from earlier.
 
 <p align="center">
-  <img src="images/2/Triangle-Graphics-4.png" alt="Triangle Graphics 4" width="500" height="auto"/>
+  <img src="images/3/Triangle-Graphics-4.png" alt="Triangle Graphics 4" width="500" height="auto"/>
 </p>
 
 Finally, our shape enters the **fragment shader** process. The rasterized triangle from earlier does not contain any color information. This step maps colors to the pixels either by using color information or by using texture information from texture coordinates.
 
 <p align="center">
-  <img src="images/2/Triangle-Graphics-5.png" alt="Triangle Graphics 5" width="500" height="auto"/>
+  <img src="images/3/Triangle-Graphics-5.png" alt="Triangle Graphics 5" width="500" height="auto"/>
 </p>
 
