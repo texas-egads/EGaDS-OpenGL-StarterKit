@@ -324,3 +324,26 @@ GLfloat vertices[] = {
   };
 ```
 
+## Loading Shaders
+
+At the moment we do have the shader sources, but we don't exactly have shader objects. This makes them essentially useless. Therefore, we need to compile and load them and access them by reference in order to use them and render our triangle!
+
+We can first use `glCreateShader()` and specify that it is a vertex shader using the `GL_VERTEX_SHADER` flag. We can store this in a `GLuint`, which is **OpenGL**'s version of an unsigned integer.
+
+We can then provide the shader with a reference to our source `char` pointer and specify that we are only giving it 1 string.
+
+One problem, the GPU can't understand the shader from source, so we should compile this shader right now so we can use it later. Luckily **OpenGL** provides the `glCompileShader` function so we can do this easily!
+
+```cpp
+GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+glCompileShader(vertexShader);
+```
+
+We can then repeat this for our fragment shader as well!
+
+``` cpp
+GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+glCompileShader(fragmentShader);
+```
