@@ -74,9 +74,10 @@ Cool! Now you should fully be able to build and run your application! At it's cu
 Now that we have our project ready to go, let's start by creating a window. For that, we will be using the **GLFW** library.
 
 ## Setting up GLFW
-We can first start by including **GLFW** at the top of our **main.cpp** file and let's include **iostream** as well!
+We can first start by including **GLFW** and **GLAD** at the top of our **main.cpp** file and let's include **iostream** as well!
 ```cpp
 #include <iostream>
+#include "glad/glad.h"
 #include "GLFW/glfw3.h"
 ```
 For those unfamiliar with C++ include formatting, 
@@ -128,8 +129,9 @@ glfwTerminate();
 ```
 Now your **main.cpp** file should look something like this!
 ```cpp
-#include<iostream>
-#include<GLFW/glfw3.h>
+#include <iostream>
+#include "glad/glad.h"
+#include "GLFW/glfw3.h"
 
 int main(void) {
 	glfwInit();
@@ -172,8 +174,9 @@ while (!glfwWindowShouldClose(window)) {
   <img src="images/2/Create-Window-Show.png" alt="Create Window Show" width="500" height="auto"/>
 </p>
 
-Now this window is a little boring, so let's apply a bit of color to it! First we will set up our **OpenGL** viewport to match the size of the **GLFW** window. In this case, that is `800` by `800`!
+Now this window is a little boring, so let's apply a bit of color to it! First, let's load the **OpenGL** context and set up our **OpenGL** viewport to match the size of the **GLFW** window. In this case, that is `800` by `800`!
 ```cpp
+gladLoadGL();
 glViewport(0, 0, 800, 800);
 ```
 Then We can define the **OpenGL** clear color. This is the color uses to clear the screen when we clear the buffer bit. I'm going to choose some random rgb values, but feel free to pick whatever color you enjoy!
@@ -230,15 +233,16 @@ int main(void) {
 	
 	glfwMakeContextCurrent(window);
 
-  glViewport(0, 0, 800, 800);
-  glClearColor(0.07f, 0.28f, 0.55f, 1.0f);
-  glClear(GL_COLOR_BUFFER_BIT);
-  glfwSwapBuffers(window);
-
-  while (!glfwWindowShouldClose(window)) {
-    glfwPollEvents();
-  }
-
+	gladLoadGL();
+	glViewport(0, 0, 800, 800);
+	glClearColor(0.07f, 0.28f, 0.55f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glfwSwapBuffers(window);
+	
+	while (!glfwWindowShouldClose(window)) {
+		glfwPollEvents();
+	}
+	
 	glfwDestroyWindow(window);
 	glfwTerminate();
 	return 0;
@@ -289,3 +293,22 @@ Finally, our shape enters the **fragment shader** process. The rasterized triang
   <img src="images/3/Triangle-Graphics-5.png" alt="Triangle Graphics 5" width="500" height="auto"/>
 </p>
 
+## Shader Source Code
+
+We will cover shaders and how they work shortly, but for now we will just use a default vertex and fragment shader and store them as `char` pointers.
+
+```cpp
+const char* vertexShaderSource = "#version 330 core\n"
+"layout (location = 0) in vec3 aPos;\n"
+"void main()\n"
+"{\n"
+"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+"}\0";
+
+const char* fragmentShaderSource = "#version 330 core\n"
+"out vec4 FragColor;\n"
+"void main()\n"
+"{\n"
+"   FragColor = vec4(0.8f, 0.3f, 0.02f, 1.0f);\n"
+"}\n\0";
+```
