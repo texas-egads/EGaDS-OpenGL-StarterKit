@@ -312,3 +312,15 @@ const char* fragmentShaderSource = "#version 330 core\n"
 "   FragColor = vec4(0.8f, 0.3f, 0.02f, 1.0f);\n"
 "}\n\0";
 ```
+
+## Setting up Vertices
+
+Now what we can do is set up an array of `GLfloats` this is **OpenGL**'s data type for floats when data loading. Here we have a set of 3 points that make up a triangle in 2D space. Note that the coordinate system is normalized, so `(0, 0)` is at the bottom left of the viewport and `(1, 1)` is at the top right. These coordinates show an equilateral triangle in the middle of the screen, hence the more complicated calculations, feel free to choose any set of points for your triangle, however!
+```cpp
+GLfloat vertices[] = {
+	-0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,
+	0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,
+	0.0f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f 	
+  };
+```
+
