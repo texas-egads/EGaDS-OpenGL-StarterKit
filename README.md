@@ -326,7 +326,7 @@ GLfloat vertices[] = {
 
 ## Loading Shaders
 
-At the moment we do have the shader sources, but we don't exactly have shader objects. This makes them essentially useless. Therefore, we need to compile and load them and access them by reference in order to use them and render our triangle!
+At the moment we do have the shader sources, but we don't exactly have shader objects. This makes them essentially useless. Therefore, we need to access, load, and compile them by reference in order to use them and render our triangle!
 
 We can first use `glCreateShader()` and specify that it is a vertex shader using the `GL_VERTEX_SHADER` flag. We can store this in a `GLuint`, which is **OpenGL**'s version of an unsigned integer.
 
