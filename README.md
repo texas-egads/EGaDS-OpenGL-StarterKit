@@ -15,7 +15,7 @@ git clone https://github.com/texas-egads/EGaDS-OpenGL-StarterKit.git
 > **Note:** Support for **Mac** builds is coming soon, for now it is not supported.
 
 ## For Linux
-Make sure your system has the **necessary drivers** for your graphics card. Installation instructions for those depend on your distribution. Also make sure you have a **C/C++ compiler**. You can verify this by doing a check to see if you can see the compiler information.
+Make sure your system has the **necessary drivers** for your graphics card. The installation instructions for those depend on your distribution. Also make sure you have a **C/C++ compiler**. You can verify this by doing a check to see if you can see the compiler information.
 ```
 g++ --version
 ```
@@ -74,7 +74,7 @@ Cool! Now you should fully be able to build and run your application! At it's cu
 Now that we have our project ready to go, let's start by creating a window. For that, we will be using the **GLFW** library.
 
 ## Setting up GLFW
-We can first start by including **GLFW** and **GLAD** at the top of our **main.cpp** file and let's include **iostream** as well!
+We can start by including **GLFW** and **GLAD** at the top of our **main.cpp** file, and let's include **iostream** as well!
 ```cpp
 #include <iostream>
 #include "glad/glad.h"
@@ -84,7 +84,7 @@ For those unfamiliar with C++ include formatting,
 - `#include <filename>` makes the preprocessor search in an implementation-defined manner, normally in directories predefined by the compiler. It's usually used for items that are in the standard library and other header files associated with the target platform. 
 - `#include "filename"` also makes the preprocessor search in an implementation-defined manner, but it is normally used to include our own header files and third-party libraries. Which in this case, is **GLFW**
 
-Once that's settled, the first thing we need to do is initialize **GLFW** so we can properly use its functionality! 
+Once that's settled, the next thing we need to do is initialize **GLFW** so we can properly use its functionality! 
 ```cpp
 glfwInit();
 ```
@@ -94,7 +94,7 @@ glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 ```
-What we are doing here is providing the version of our **GLFW** context and specifying our **OpenGL** context. From here let's create a **GLFWwindow*** pointer for our window!
+What we are doing here is providing the version of our **GLFW** context and specifying our **OpenGL** context. From here let's create a **GLFWwindow** pointer for our window!
 ```cpp
 GLFWwindow* window = glfwCreateWindow(800, 800, "EGaDS OpenGL Starter Kit", NULL, NULL);
 ```
@@ -117,7 +117,7 @@ if (window == NULL) {
 }
 ```
 
-Now, in order to actually use the window we just created, we can use `glfwMakeContextCurrent()` and pass in our **GLFWwindow** pointer. This introduces the window object to the current context in **OpenGL**
+Now, in order to actually use the window we just created, we can use `glfwMakeContextCurrent()` and pass in our **GLFWwindow** pointer. This introduces the window object to the current context in **OpenGL**.
 ```cpp
 glfwMakeContextCurrent(window);
 ```
@@ -160,11 +160,11 @@ Let's run our first window! If you have really good eyes, you might notice a win
   <img src="images/2/Create-Window-Flash.gif" alt="Create Window Flash" width="500" height="auto"/>
 </p>
 
-The reason this happens is because as soon as the window is created, we destroy it and terminate the program. This is why we will need a loop to keep our window open and running!
+The reason this happens is that as soon as the window is created, we destroy it and terminate the program. This is why we will need a loop to keep our window open and running!
 
-## Keeping the Window Open
+## Keeping the Window Open and Running
 
-So let's fix that! We can add a while loop at the end of our setup that will check if the window should close, and poll for any additional events triggered by the user.
+So let's fix that! We can add a little while loop at the end of our setup that will check if the window should close, and poll for any additional events triggered by the user.
 ```cpp
 while (!glfwWindowShouldClose(window)) {
     glfwPollEvents();
@@ -179,7 +179,7 @@ Now this window is a little boring, so let's apply a bit of color to it! First, 
 gladLoadGL();
 glViewport(0, 0, 800, 800);
 ```
-Then We can define the **OpenGL** clear color. This is the color uses to clear the screen when we clear the buffer bit. I'm going to choose some random rgb values, but feel free to pick whatever color you enjoy!
+Then we can define the **OpenGL** clear color. This is the color used to clear the screen when we clear the buffer bit. I'm going to choose some random rgb values, but feel free to pick whatever color you enjoy!
 ```cpp
 glClearColor(0.07f, 0.28f, 0.55f, 1.0f);
 ```
@@ -188,7 +188,7 @@ Now that we set the color, we can clear the **OpenGL** color buffer. This is the
 glClear(GL_COLOR_BUFFER_BIT);
 ```
 
-Lastly we need to instruct **OpenGL** to swap the front and back buffers, and to understand this we need to talk a bit about how our graphics are rendered to the screen!
+Lastly, we need to instruct **OpenGL** to swap the front and back buffers, and to understand this we need to talk a bit about how our graphics are rendered to the screen!
 
 So how screens display our game is it renders images really fast to give us the illusion of motion. These images are called frames and are constantly being drawn.
 
@@ -202,13 +202,13 @@ While loading the pixels from the current frame to the screen, the next frame is
   <img src="images/2/Window-Buffer-1.png" alt="Window Buffering 1" width="500" height="auto"/>
 </p>
 
-A while later, a swap buffer call is made and the 2 buffers switch jobs and now the formerly back buffer becomes the front buffer, and vice versa. The previous frame is now being overwritten with new information to prepare for the following frame. This process is constantly repeated and is called **buffer swapping**
+A while later, a swap buffer call is made and the 2 buffers switch jobs and now the formerly back buffer becomes the front buffer, and vice versa. The previous frame is now being overwritten with new information to prepare for the following frame. This process is constantly repeated and is called **buffer swapping**.
 
 <p align="center">
   <img src="images/2/Window-Buffer-2.png" alt="Window Buffering 2" width="500" height="auto"/>
 </p>
 
-So let's implement this buffer swapping in our C++ application! **OpenGL** actually makes this really simple!
+So let's implement this buffer swapping in our **C++** application! **OpenGL** actually makes this really simple!
 ```cpp
 glfwSwapBuffers(window);
 ```
@@ -249,7 +249,7 @@ int main(void) {
 }
 ```
 
-Awesome! Now if we compile and run this with CMake, we should have a nicely-colored window!
+Awesome! Now if we compile and run this with **CMake**, we should have a nicely-colored window!
 
 <p align="center">
   <img src="images/2/Final-Window.png" alt="Final Window" width="500" height="auto"/>
@@ -261,7 +261,7 @@ Now let's add a triangle to our window! But first let's go over some graphics pi
 
 ## Graphics Pipeline
 
-So the OpenGL graphics pipeline consists of several steps that essentially takes in a bunch of data, and turns it into a final output frame that our window can display! The data is an array of vertices. However, these vertices are not necessarily just points, they can contain position data, color data, or texture coordinates, etc. 
+So the **OpenGL** graphics pipeline consists of several steps that essentially takes in a bunch of data and turns it into a final output frame that our window can display! The data is formatted as an array of vertices. However, these vertices are not necessarily just points, they can contain position data, color data, or texture coordinates, etc. 
 
 The first phase of the graphics pipeline is the **vertex shader**. This takes the positions of all the vertices and transforms them, giving you inidividual points.
 
@@ -281,7 +281,7 @@ Next, we have the **geometry shader**, which can add vertices and create new pri
   <img src="images/3/Triangle-Graphics-3.png" alt="Triangle Graphics 3" width="500" height="auto"/>
 </p>
 
-After our core geometry is laid out, we can enter the **rasterization** step. This turns our neat geometry into a series of pixels that approximates our shape. (Excuse my poor drawing, it's harder than it looks!) As you can see the the diagram below, the boxes represent the pixelated version of the triangle from earlier.
+After our core geometry is laid out, we can enter the **rasterization** step. This turns our neat geometry into a series of pixels that approximates our shape. (Excuse my poor drawing, it's harder than it looks!) As you can see in the diagram below, the boxes represent a pixelated version of the triangle from earlier.
 
 <p align="center">
   <img src="images/3/Triangle-Graphics-4.png" alt="Triangle Graphics 4" width="500" height="auto"/>
@@ -315,7 +315,7 @@ const char* fragmentShaderSource = "#version 330 core\n"
 
 ## Setting up Vertices
 
-Now what we can do is set up an array of `GLfloats` this is **OpenGL**'s data type for floats when data loading. Here we have a set of 3 points that make up a triangle in 2D space. Note that the coordinate system is normalized, so `(0, 0)` is at the bottom left of the viewport and `(1, 1)` is at the top right. These coordinates show an equilateral triangle in the middle of the screen, hence the more complicated calculations, feel free to choose any set of points for your triangle, however!
+Now what we can do is set up an array of `GLfloats` this is **OpenGL**'s data type for floats when data loading. Here we have a set of 3 points that make up a triangle in 2D space. Note that the coordinate system is normalized, so `(0, 0)` is at the bottom left of the viewport and `(1, 1)` is at the top right. These coordinates show an equilateral triangle in the middle of the screen, hence the more complicated calculations. Feel free to choose any set of points for your triangle, however!
 ```cpp
 GLfloat vertices[] = {
 	-0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,
@@ -341,7 +341,6 @@ glCompileShader(vertexShader);
 ```
 
 We can then repeat this for our fragment shader as well!
-
 ``` cpp
 GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
@@ -364,7 +363,7 @@ glDeleteShader(fragmentShader);
 
 ## Vertex Buffer Objects (VBOs)
 
-Great work! Now we have shaders working! However, we aren't exactly doing anything at the moment. At this point we want to upload information about our vertices to the GPU. How **OpenGL** handles this is using big batches called **buffers**. 
+Great work! Now we have shaders working! However, we aren't exactly doing anything at the moment. At this point, we want to upload information about our vertices to the GPU. How **OpenGL** handles this is using big batches called **buffers**. 
 
 A **Vertex Buffer Object** is a type of **buffer** that stores vertex information. Think of this as formatting the information for our GPU. Like other **OpenGL** elements, let's store this in a `GLuint` and pass it as a reference to **OpenGL**'s `glGenBuffers()` function.
 ```cpp
@@ -422,13 +421,13 @@ glEnableVertexAttribArray(0);
 
 ## Clean Up
 
-Great! We are so close! This step is optional, but it is generally good practice to unbind your **buffer objects** when you are done using them. We will use the same functions above but just ass `0` into them to unbind them.
+Great! We are so close! This step is optional, but it is generally good practice to unbind your **buffer objects** when you are done using them. We will use the same functions above but just pass `0` into them to unbind them.
 ```cpp
 glBindBuffer(GL_ARRAY_BUFFER, 0);
 glBindVertexArray(0);
 ```
 
-After the window loop, let's delete the objects we created as well to do a bit of cleaup work! The functions `glDeleteVertexArrays()`, `glDeleteBuffers()`, and `glDeleteProgram()` will help with that!
+After the window loop, let's delete the objects we created as well to do a bit of cleanup work! The functions `glDeleteVertexArrays()`, `glDeleteBuffers()`, and `glDeleteProgram()` will help with that!
 ```cpp
 glDeleteVertexArrays(1, &VAO);
 glDeleteBuffers(1, &VBO);
@@ -572,7 +571,7 @@ So we are able to draw a triangle now by telling **OpenGL** to use the triangle 
   <img src="images/4/Index-Buffer-1.png" alt="Element Buffer 1" width="500" height="auto"/>
 </p>
 
-Hoever, consider a scenario where we would want to now draw 3 separate triangles that share a few vertices. Perhaps, like this.
+However, consider a scenario where we would want to now draw 3 separate triangles that share a few vertices. Perhaps, like this.
 
 <p align="center">
   <img src="images/4/Index-Buffer-2.png" alt="Element Buffer 2" width="500" height="auto"/>
@@ -592,7 +591,7 @@ As a solution, let's only define six vertices, `0` through `5`, as such.
 
 Then, we can make use of something called an **Element Buffer Object** that we can then use to define the order of these referenced vertices in order the draw the shapes we want. In this case, three triangles.
 
-Therefore, using our numbering system. It would look something like `[0, 4, 3, 4, 1, 5, 3, 5, 2]` to draw 3 triangles with our mapping!
+Therefore, using our numbering system, it would look something like `[0, 4, 3, 4, 1, 5, 3, 5, 2]` to draw 3 triangles with our mapping!
 
 <p align="center">
   <img src="images/4/Index-Buffer-5.png" alt="Element Buffer 5" width="500" height="auto"/>
@@ -600,7 +599,7 @@ Therefore, using our numbering system. It would look something like `[0, 4, 3, 4
 
 ## Adding New Vertices
 
-Let's jump into our code and start by adding some vertices. I am just going to add some vertices on the midpoints of the triangle. we originally had.
+Let's jump into our code and start by adding some vertices. I am just going to add some vertices on the midpoints of the triangle we originally had.
 ```cpp
 GLfloat vertices[] = {
 	-0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,
@@ -620,7 +619,7 @@ GLuint indices[] =  {
 };
 ```
 
-Now we can create the **EBO** in a similar fashion to the **VAO** earlier! Let's create it's reference value as a `GLuint` and generate it's value using `glGenBuffers()`
+Now we can create the **EBO** in a similar fashion to the **VAO** earlier! Let's create its reference value as a `GLuint` and generate its value using `glGenBuffers()`
 ```cpp
 GLuint VAO, VBO, EBO;
 
@@ -635,7 +634,7 @@ glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 ```
 
-Then we can unbind our **EBO** just like the other **buffers**. Make sure to unbind them in the same order that you bind it!
+Then we can unbind our **EBO** just like the other **buffers**. Make sure to unbind them in the same order that you bind them!
 ```cpp
 glBindBuffer(GL_ARRAY_BUFFER, 0);
 glBindVertexArray(0);
@@ -653,7 +652,7 @@ glDeleteProgram(shaderProgram);
 ## Draw Elements
 
 Now, let's draw the elements that we described earlier with our vertices and indices arrays. We can replace the `glDrawArrays()` call with a `glDrawElements()` call. The parameters for `glDrawElements()` are as follows.
-- The shape primitive to draw, which is `GL_TRIANGLES` in our case
+- The shape primitive type to draw, which in our case is a triangle, so we will use `GL_TRIANGLES`
 - The number of indices
 - The data type of the indices, which is `GL_UNSIGNED_INT` in our case
 - The starting location of the beginning index for the shape, which is `0` in our case
