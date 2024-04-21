@@ -562,3 +562,10 @@ Now finally! You can pat yourself on the back since you just drew your first tri
 <p align="center">
   <img src="images/3/Final-Triangle-Window.png" alt="Final Triangle Window" width="500" height="auto"/>
 </p>
+
+
+# Element Buffers
+
+So we are able to draw a triangle now by telling **OpenGL** to use the triangle primitive to draw a triangle between 3 vertices. We can label these vertices `0`, `1`, and `2`. 
+
+
