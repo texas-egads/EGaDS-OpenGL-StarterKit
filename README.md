@@ -557,3 +557,8 @@ int main(void) {
 	return 0;
 }
 ```
+Now finally! You can pat yourself on the back since you just drew your first triangle in **OpenGL**. This is notoriously the "Hello World" of computer graphics, so congratulations!
+
+<p align="center">
+  <img src="images/3/Final-Triangle-Window.png" alt="Final Triangle Window" width="500" height="auto"/>
+</p>
