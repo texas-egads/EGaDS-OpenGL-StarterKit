@@ -1,5 +1,5 @@
 
-# EGaDS! Super Simple OpenGL CMake Starter Kit
+# EGaDS! Super Simple OpenGL Starter Kit
 
 Hey everyone! This is going to be a very simple way of setting up a basic 3D application using **C++** and **OpenGL**. This should give you a quick start in basic computer graphics concepts and allow you to start making cool games/projects using these concepts!
 
@@ -557,3 +557,15 @@ int main(void) {
 	return 0;
 }
 ```
+Now finally! You can pat yourself on the back since you just drew your first triangle in **OpenGL**. This is notoriously the "Hello World" of computer graphics, so congratulations!
+
+<p align="center">
+  <img src="images/3/Final-Triangle-Window.png" alt="Final Triangle Window" width="500" height="auto"/>
+</p>
+
+
+# Element Buffers
+
+So we are able to draw a triangle now by telling **OpenGL** to use the triangle primitive to draw a triangle between 3 vertices. We can label these vertices `0`, `1`, and `2`. 
+
+
