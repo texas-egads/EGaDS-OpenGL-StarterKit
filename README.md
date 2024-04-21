@@ -309,7 +309,7 @@ const char* fragmentShaderSource = "#version 330 core\n"
 "out vec4 FragColor;\n"
 "void main()\n"
 "{\n"
-"   FragColor = vec4(0.8f, 0.3f, 0.02f, 1.0f);\n"
+"   FragColor = vec4(0.8f, 0.65f, 0.97f, 1.0f);\n"
 "}\n\0";
 ```
 
@@ -346,4 +346,214 @@ We can then repeat this for our fragment shader as well!
 GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
 glCompileShader(fragmentShader);
+```
+
+So now, in order to actually use these shaders we have to wrap them up in what is called a **shader programs**. We can store this in a `GLuint` and call `glCreateProgram`. Aftwerwards, we can use `glAttachShader()` to attach our two shaders to the program, then link them with `glLinkProgram()`.
+```cpp
+GLuint shaderProgram = glCreateProgram();
+glAttachShader(shaderProgram, vertexShader);
+glAttachShader(shaderProgram, fragmentShader);
+glLinkProgram(shaderProgram);
+```
+
+Now that these are attached we can also delete the shader objects we just generated, since they are now uploaded to the GPU.
+```cpp
+glDeleteShader(vertexShader);
+glDeleteShader(fragmentShader);
+```
+
+## Vertex Buffer Objects (VBOs)
+
+Great work! Now we have shaders working! However, we aren't exactly doing anything at the moment. At this point we want to upload information about our vertices to the GPU. How **OpenGL** handles this is using big batches called **buffers**. 
+
+A **Vertex Buffer Object** is a type of **buffer** that stores vertex information. Think of this as formatting the information for our GPU. Like other **OpenGL** elements, let's store this in a `GLuint` and pass it as a reference to **OpenGL**'s `glGenBuffers()` function.
+```cpp
+GLuint VBO;
+glGenBuffers1, &VBO);
+```
+
+We should also introduce the concept of **binding** a **buffer**. In **OpenGL**, **binding** a **buffer object** makes that object the current **buffer object**. That way **OpenGL** modifies that **buffer** when performing operations.
+
+Let's bind this VBO using `glBindBuffer()`, specifying it as a `GL_ARRAY_BUFFER` type.
+```cpp
+glBindBuffer(GL_ARRAY_BUFFER, VBO);
+```
+
+OK we set this **VBO** up now, so let's load in our vertex information from earlier. For this, we can use the `glBufferData()` function. We will specify it as a `GL_ARRAY_BUFFER` type and provide it the size of our vertices and the value of our vertices array. We will also specify with the `GL_STATIC_DRAW` flag, since we are only modifying this data once and we will be drawing this on the screen.
+```cpp
+glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+```
+
+## Vertex Array Objects (VAOs)
+
+We have this nicely packed information about our vertices. However, **OpenGL** wouldn't know where to find this information. For this we can use another type of object called a **Vertex Array Object**, which stores pointers to multiple **VBO**s and tells **OpenGL** how to interpret and switch between them. Let's generate that now by modifying the code above.
+
+We first initialize it along with our **VBO**
+```cpp
+GLuint VAO, VBO;
+```
+
+Then we use `glGenVertexArrays()` to generate that **VAO**. Make sure to do that before the **VBO** generate function.
+```cpp
+glGenVertexArrays(1, &VAO);
+glGenBuffers(1, &VBO);
+```
+
+Next, let's bind our new **VAO** using `glBindVertexArray()`. Again, do this before binding the **VBO**
+```cpp
+glBindVertexArray(VAO);
+
+glBindBuffer(GL_ARRAY_BUFFER, VBO);
+glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+```
+
+Now that all that is set up, we can reconfigure the **VAO** so **OpenGL** knows how to read the **VBO**. We can do this with `glVertexAttribPointer()`. The parameters are as follows.
+- The position of the vertex attribute, which is `0` in our case.
+- The number of vertices
+- The data type of the vertices, where we use the `GL_FLOAT` flag
+- Whether the data values should be normalized, we should do `GL_FALSE` here
+- The total size in bytes of the **VBO**, which is the size of each vertex times `3`
+- A pointer to which the vertices in the array begin. Since we start at the 0 position of the array, we can cast the value of 0 to a `void` pointer
+In order to use this attribute array, we have to enable it with `glEnableVertexAttribArray()`
+```cpp
+glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+glEnableVertexAttribArray(0);
+```
+
+## Clean Up
+
+Great! We are so close! This step is optional, but it is generally good practice to unbind your **buffer objects** when you are done using them. We will use the same functions above but just ass `0` into them to unbind them.
+```cpp
+glBindBuffer(GL_ARRAY_BUFFER, 0);
+glBindVertexArray(0);
+```
+
+After the window loop, let's delete the objects we created as well to do a bit of cleaup work! The functions `glDeleteVertexArrays()`, `glDeleteBuffers()`, and `glDeleteProgram()` will help with that!
+```cpp
+glDeleteVertexArrays(1, &VAO);
+glDeleteBuffers(1, &VBO);
+glDeleteProgram(shaderProgram);
+```
+
+## Final Steps
+
+We are so close! Now we should move some of the logic for clearing the screen from the last section, and the **GLFW** swap buffers call. They should now live in the **GLFW** window loop to clear the screen every frame. It should now look something like this!
+```cpp
+while (!glfwWindowShouldClose(window)) {
+	glClearColor(0.07f, 0.28f, 0.55f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glfwSwapBuffers(window);
+	glfwPollEvents();
+}
+```
+
+After clearing the screen, we can use `glUseProgram()`, `glBindVertexArray()` to set up our **VAO** and shader program for drawing.
+```cpp
+glUseProgram(shaderProgram);
+glBindVertexArray(VAO);
+```
+
+Then, once those are set up, we can finally call `glDrawArrays()`, which will be the call that actually draws our triangle to the screen! We are specifying that we are drawing a triangle primitive using `GL_TRIANGLES`. We also provide it the starting position of the vertices, which is `0`, and the number of vertices, which is `3`, since we have 1 triangle.
+```cpp
+glDrawArrays(GL_TRIANGLES, 0, 3);
+```
+
+At this point, your **main.cpp** should look something like what I have below. It looks a little messy, which is why we will clean it up later. But now we should have everything we need to draw a triangle to the screen!
+```cpp
+#include<iostream>
+#include <tgmath.h>
+#include "glad/glad.h"
+#include "GLFW/glfw3.h"
+
+const char* vertexShaderSource = "#version 330 core\n"
+"layout (location = 0) in vec3 aPos;\n"
+"void main()\n"
+"{\n"
+"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+"}\0";
+
+const char* fragmentShaderSource = "#version 330 core\n"
+"out vec4 FragColor;\n"
+"void main()\n"
+"{\n"
+"   FragColor = vec4(0.8f, 0.65f, 0.97f, 1.0f);\n"
+"}\n\0";
+
+int main(void) {
+	glfwInit();
+
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+	GLFWwindow* window = glfwCreateWindow(800, 800, "EGaDS OpenGL Starter Kit", NULL, NULL);
+  if (window == NULL) {
+		std::cout << "Failed to create GLFW window" << std::endl;
+		glfwTerminate();
+		return -1;
+	}
+	glfwMakeContextCurrent(window);
+
+	gladLoadGL();
+	glViewport(0, 0, 800, 800);
+
+
+	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+	glCompileShader(vertexShader);
+
+	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+	glCompileShader(fragmentShader);
+
+	GLuint shaderProgram = glCreateProgram();
+	glAttachShader(shaderProgram, vertexShader);
+	glAttachShader(shaderProgram, fragmentShader);
+	glLinkProgram(shaderProgram);
+
+	glDeleteShader(vertexShader);
+	glDeleteShader(fragmentShader);
+
+	GLfloat vertices[] = {
+		-0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,
+		0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,
+		0.0f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f 	
+  };
+
+	GLuint VAO, VBO;
+
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+
+	glBindVertexArray(VAO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+
+	while (!glfwWindowShouldClose(window)) {
+		glClearColor(0.07f, 0.28f, 0.55f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+		glUseProgram(shaderProgram);
+		glBindVertexArray(VAO);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+
+		glfwSwapBuffers(window);
+		glfwPollEvents();
+	}
+
+
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &VBO);
+	glDeleteProgram(shaderProgram);
+
+	glfwDestroyWindow(window);
+	glfwTerminate();
+	return 0;
+}
 ```
