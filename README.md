@@ -663,3 +663,6 @@ glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
 
 And now we if we build and run, you can see we have 3 separate triangles that have 3 shared vertices! Cool right?
 
+<p align="center">
+  <img src="images/4/Final-Element-Triangle.png" alt="Final Element Triangle" width="500" height="auto"/>
+</p>
