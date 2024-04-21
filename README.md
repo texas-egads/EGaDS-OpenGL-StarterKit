@@ -564,8 +564,102 @@ Now finally! You can pat yourself on the back since you just drew your first tri
 </p>
 
 
-# Element Buffers
+# Element Buffer Objects (EBOs)
 
 So we are able to draw a triangle now by telling **OpenGL** to use the triangle primitive to draw a triangle between 3 vertices. We can label these vertices `0`, `1`, and `2`. 
 
+<p align="center">
+  <img src="images/4/Index-Buffer-1.png" alt="Element Buffer 1" width="500" height="auto"/>
+</p>
+
+Hoever, consider a scenario where we would want to now draw 3 separate triangles that share a few vertices. Perhaps, like this.
+
+<p align="center">
+  <img src="images/4/Index-Buffer-2.png" alt="Element Buffer 2" width="500" height="auto"/>
+</p>
+
+As you can see, there is an overlap of vertices at the three shared points. This means that in order to upload the necessary information, we would need nine total vertices when in reality, we probably only need six if we could reuse the shared vertices.
+
+<p align="center">
+  <img src="images/4/Index-Buffer-3.png" alt="Element Buffer 3" width="500" height="auto"/>
+</p>
+
+As a solution, let's only define six vertices, `0` through `5`, as such.
+
+<p align="center">
+  <img src="images/4/Index-Buffer-4.png" alt="Element Buffer 4" width="500" height="auto"/>
+</p>
+
+Then, we can make use of something called an **Element Buffer Object** that we can then use to define the order of these referenced vertices in order the draw the shapes we want. In this case, three triangles.
+
+Therefore, using our numbering system. It would look something like `[0, 4, 3, 4, 1, 5, 3, 5, 2]` to draw 3 triangles with our mapping!
+
+<p align="center">
+  <img src="images/4/Index-Buffer-5.png" alt="Element Buffer 5" width="500" height="auto"/>
+</p>
+
+## Adding New Vertices
+
+Let's jump into our code and start by adding some vertices. I am just going to add some vertices on the midpoints of the triangle. we originally had.
+```cpp
+GLfloat vertices[] = {
+	-0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,
+	0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,
+	0.0f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f, 	
+	-0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f, 	
+	0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f, 	
+	0.0f, -0.5f * float(sqrt(3)) / 3, 0.0f, 	
+};
+```
+Next let's add a `GLuint` array of indices that will map our triangle layout using our given vertices. Note, the numbers will be in a different order than my diagram since this is based on the order from the vertices array above.
+```cpp
+GLuint indices[] =  {
+	0, 3, 5,
+	3, 2, 4,
+	5, 4, 1,
+};
+```
+
+Now we can create the **EBO** in a similar fashion to the **VAO** earlier! Let's create it's reference value as a `GLuint` and generate it's value using `glGenBuffers()`
+```cpp
+GLuint VAO, VBO, EBO;
+
+glGenVertexArrays(1, &VAO);
+glGenBuffers(1, &VBO);
+glGenBuffers(1, &EBO);
+```
+
+Next, we need to bind the **EBO** using `glBindBuffer()` and the `glBufferData()` methods, but this time with the `GL_ELEMENT_ARRAY_BUFFER` flag instead!
+```cpp
+glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+```
+
+Then we can unbind our **EBO** just like the other **buffers**. Make sure to unbind them in the same order that you bind it!
+```cpp
+glBindBuffer(GL_ARRAY_BUFFER, 0);
+glBindVertexArray(0);
+glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+```
+
+And finally, we can delete the **EBO** at the end along with the other **buffer objects**!
+```cpp
+glDeleteVertexArrays(1, &VAO);
+glDeleteBuffers(1, &VBO);
+glDeleteBuffers(1, &EBO);
+glDeleteProgram(shaderProgram);
+```
+
+## Draw Elements
+
+Now, let's draw the elements that we described earlier with our vertices and indices arrays. We can replace the `glDrawArrays()` call with a `glDrawElements()` call. The parameters for `glDrawElements()` are as follows.
+- The shape primitive to draw, which is `GL_TRIANGLES` in our case
+- The number of indices
+- The data type of the indices, which is `GL_UNSIGNED_INT` in our case
+- The starting location of the beginning index for the shape, which is `0` in our case
+```cpp
+glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
+```
+
+And now we if we build and run, you can see we have 3 separate triangles that have 3 shared vertices! Cool right?
 
