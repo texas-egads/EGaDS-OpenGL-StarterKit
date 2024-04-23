@@ -35,19 +35,19 @@ Now navigate to the local repository's main project folder and run these command
 The last command should do nothing since the **main.cpp** file in the template just returns 0. So you are good to go!
 
 ## For Windows
-- **Install Visual Studio**: If you haven't already, download and install Visual Studio from the [official website](https://visualstudio.microsoft.com/).
+**Install Visual Studio**: If you haven't already, download and install Visual Studio from the [official website](https://visualstudio.microsoft.com/).
 
-- **Install CMake support**: During the installation of Visual Studio, make sure to select the workload "Desktop development with C++", which includes CMake support. If you've already installed Visual Studio without this workload, you can modify your installation by running the Visual Studio Installer again and adding the workload.
+**Install CMake support**: During the installation of Visual Studio, make sure to select the workload "Desktop development with C++", which includes CMake support. If you've already installed Visual Studio without this workload, you can modify your installation by running the Visual Studio Installer again and adding the workload.
 
-- **Open your project folder in Visual Studio**: Open Visual Studio and either create a new project or open an existing one where your CMakeLists.txt file resides. You can do this by selecting "Open a project or solution" from the Visual Studio start page or by going to the "File" menu and choosing "Open" > "Folder...".
+**Open your project folder in Visual Studio**: Open Visual Studio and either create a new project or open an existing one where your CMakeLists.txt file resides. You can do this by selecting "Open a project or solution" from the Visual Studio start page or by going to the "File" menu and choosing "Open" > "Folder...".
 
-- **Configure CMake settings**: Once your project is open in Visual Studio, go to the "CMake" menu and choose "Change CMake Settings". This will create or open a CMakeSettings.json file where you can configure your CMake project settings. Make sure to set the "cmakeExecutable" to the path of your CMake executable if it's not automatically detected.
+**Configure CMake settings**: Once your project is open in Visual Studio, go to the "CMake" menu and choose "Change CMake Settings". This will create or open a CMakeSettings.json file where you can configure your CMake project settings. Make sure to set the "cmakeExecutable" to the path of your CMake executable if it's not automatically detected.
 
-- **Configure your build target**: In the CMakeSettings.json file, specify the configuration you want to build (e.g., Debug or Release) and the architecture (e.g., x64 or x86). x86 should be selected with the current project files due to the precompiled binaries. This is to remain compatible with older devices. If you want to target x64 architectures, it is recommended to replace these binaries with their x64 counterparts.
+**Configure your build target**: In the CMakeSettings.json file, specify the configuration you want to build (e.g., Debug or Release) and the architecture (e.g., x64 or x86). x86 should be selected with the current project files due to the precompiled binaries. This is to remain compatible with older devices. If you want to target x64 architectures, it is recommended to replace these binaries with their x64 counterparts.
 
-- **Build your project**: After configuring CMake settings, you can build your project by going to the "Build" menu and selecting "Build All" (or pressing `Ctrl+Shift+B`). Visual Studio will generate the build files using CMake and build your project according to the specified settings.
+**Build your project**: After configuring CMake settings, you can build your project by going to the "Build" menu and selecting "Build All" (or pressing `Ctrl+Shift+B`). Visual Studio will generate the build files using CMake and build your project according to the specified settings.
 
-- **Run and debug your project**: Once the build is complete, you can run and debug your project directly from Visual Studio using the built-in debugger. Set breakpoints in your code, choose the desired startup configuration (e.g., executable), and start debugging by pressing `F5` or clicking the "Start Debugging" button.
+**Run and debug your project**: Once the build is complete, you can run and debug your project directly from Visual Studio using the built-in debugger. Set breakpoints in your code, choose the desired startup configuration (e.g., executable), and start debugging by pressing `F5` or clicking the "Start Debugging" button.
 
 <p align="center">
   <img src="images/1/Final-Setup.png" alt="Final Setup" width="500" height="auto"/>
