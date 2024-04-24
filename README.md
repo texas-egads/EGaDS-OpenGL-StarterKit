@@ -1350,3 +1350,52 @@ Shader::Shader(const char* vertexFile, const char* fragmentFile) {
   glDeleteShader(fragmentShader);
 }
 ```
+
+# Textures
+
+Awesome so now we know everything about shaders. So it's time to talk a bit about textures, specifically how to load them and use them!
+
+## Rendering Quads
+First of all! Our 3 triangles are very cool, but when we are checking if our images are loaded properly it is better to render a quad to display this. Thus, let's reorganize our vertices and indices so that we are rendering a rainbow square!
+```cpp
+GLfloat vertices[] = {
+  -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+  -0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+  0.5f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
+  0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f
+};
+
+GLuint indices[] = {
+	0, 2, 1, 
+	0, 3, 2
+};
+```
+
+How quads are typically rendered is with 2 write triangles organized in the layout below. Hence, our vertices will match it in a counterclockwise fashion.
+
+<p align="center">
+  <img src="images/6/Quad-Triangles.png" alt="Quad Triangles" width="500" height="auto"/>
+</p>
+
+You will also need to change the `glDrawElements()` function in the loop, since now you have 6 indices.
+
+Now compile and run it to make sure you get this nice looking rainbow square!
+
+<p align="center">
+  <img src="images/6/Rainbow-Square.png" alt="Rainbow Square" width="500" height="auto"/>
+</p>
+
+## Loading the Texture
+Now the library we are going to use to load our texture is called **stb_image**. The **stb** library is really useful for loading different file types, but we are specifically going to use the image module of this!
+
+The image I have specifically selected for this is a square image of this puppy of size `512x512`. Dimensions of a power of `2` are generally going to perform better, but it really isn't important, use whatever image you want! Our vertices do define a square, however, so I would recommend using a square image to keep the aspect ratio if you used my coordinates!
+
+<p align="center">
+  <img src="images/6/dog.png" alt="Dog" width="500" height="auto"/>
+</p>
+
+In our `main.cpp` file, let's define some integers to store our image width, height, and the number of color channels. Since this is a PNG file, it should have 4 color channels for RGBA.
+We can then load our PNG file into a character array with `stbi_load()`
+```cpp
+
+```
