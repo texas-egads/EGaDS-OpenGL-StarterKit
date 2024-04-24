@@ -1250,3 +1250,45 @@ Now, if we compile and run, you will find a nice-looking gradient of our colors 
   <img src="images/5/Final-Shader-Triangle.png" alt="Final Shader Triangle" width="500" height="auto"/>
 </p>
 
+You might wonder why we get this gradient instead of solid colors like we defined in our indices. This is because **OpenGL** actually interpolates the data between 2 points, giving us a blend between our different RGB values. This doesn't only apply to colors, obviously our position data is being interpolated as well. If we were to define other data that would also be affected in a similar fashion!
+
+## Uniforms
+Ok we have one more thing to talk about with **shaders**. A **uniform** is a value that we can pass to a **shader** program in **OpenGL** this way we can modify our shader values and get visual changes in real time!
+
+We can worry about uploading **uniforms** later on, but for now let's define a **uniform** value in our **vertex shader**. For that, we would use the keyword `uniform`. Then, we can use this new **uniform** called `scale` to apply to our `gl_Position` calculation! This will just make our triangles bigger.
+```glsl
+#version 330 core
+
+layout (location = 0) in vec3 aPos;
+layout (location = 1) in vec3 aColor;
+
+out vec3 color;
+uniform float scale;
+
+void main() {
+	gl_Position = vec4(aPos.x + aPos.x * scale, aPos.y + aPos.y * scale, aPos.z + aPos.z * scale, 1.0);
+	color = aColor;
+}
+```
+
+However, if we compile and run this, you'll notice that we still have the same thing being displayed. This is because the uniform is defaulted to `0`, so we aren't actually adding anything to our position.
+<p align="center">
+  <img src="images/5/Final-Shader-Triangle.png" alt="Final Shader Triangle" width="500" height="auto"/>
+</p>
+
+We could assign it a value in the shader itself, but would be more cool to upload that information from our `main.cpp` file so game logic could eventually tweak our shader values!
+Let's navigate to `main.cpp` and after we load our information for **VBO**, **VAO**, **EBO**, and **shaderProgram** we can assign a `GLuint` with the location of our uniform variable on the GPU. **OpenGL** has a very useful function for this called `glGetUniformLocation()`
+```cpp
+GLuint scaleID = glGetUniformLocation(shaderProgram.ID, "scale");
+```
+
+Now that we have the location of this uniform, after calling `Activate()` on the shader, let's set the uniform value to something and check if our triangle looks different! What we are doing with `glUniformif()` is uploading one float value to the uniform location at `scaleID`. This is how we modify our shader values!
+```cpp
+glUniform1f(scaleID, 0.5f);
+```
+
+If we run this you will find that our triangles are now slightly bigger, and this was all controlled from our `main.cpp` file!
+
+<p align="center">
+  <img src="images/5/Final-Shader-Triangle.png" alt="Final Uniform Triangle" width="500" height="auto"/>
+</p>
