@@ -1122,3 +1122,120 @@ Also when we build and run, it runs just the same!
 <p align="center">
   <img src="images/4/Final-Element-Triangle.png" alt="Final Element Triangle" width="500" height="auto"/>
 </p>
+
+# Shaders
+
+Now that that's clean and organized we can move on to some other computer graphics topics. So, let's talk about **shaders**!
+
+You can kind of think of **shaders** as functions on a GPU. They can take inputs and have outputs.
+
+## Vertex Shader
+If we take a look at this **vertex shader** source code here, you can actually see that this is **OpenGL**'s shading language, called **GLSL**. It has a syntax that is pretty similar to **C**.
+```glsl
+#version 330 core
+
+layout (location = 0) in vec3 aPos;
+
+void main() {
+   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
+}
+```
+
+The first line indicates the version of OpenGL being used. We are currently using **OpenGL 3.3.0**, so we should use **GLSL** version `330`.
+```glsl
+#version 330 core
+```
+
+The second line takes a vector of three values called `aPos` at location `0`. This location is refering to the location of the vertex data it recieves. As you might remember, we set our vertices at location `0`. We could theoretically store other information like color in the other locations and use them in our **shader**.
+```glsl
+layout (location = 0) in vec3 aPos;
+```
+
+Next we have our main loop with one line. This is what is responsible for performing any calculations and giving us an output. In this code, we simple assign `gl_Position` with our position's `x`, `y`, and `z` values, plus a `1.0` for our fourth dimension. **OpenGL** recognizes `gl_Position` and knows to use it as the vertex position.
+```glsl
+void main() {
+   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
+}
+```
+## Fragment Shader
+Now in this **fragment shader** you can see that we define an output vector of four values called `FragColor`. A fragment shader must output a `vec4` due to **OpenGL** requiring color information for rendering. In this case, we just pass it our 4 floats and call it a day!
+```glsl
+#version 330 core
+
+out vec4 FragColor;
+
+void main() {
+   FragColor = vec4(0.8f, 0.65f, 0.97f, 1.0f);
+}
+```
+
+Let's modify our **vertex shader** now to grab both our position and color information!
+```glsl
+#version 330 core
+
+layout (location = 0) in vec3 aPos;
+layout (location = 1) in vec3 aColor;
+
+out vec3 color;
+
+void main() {
+	gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
+	color = aColor;
+}
+```
+
+This grabs the position information from location `0` and the color information from location `1`. Then it will output the color, which we assign in the `main()` function of the **shader**.
+
+Now in our **fragment shader** we can use this output variable `color` from our vertex shader and do what we want with it. Be sure to name your variables with the same name, or it will not be able to find your attributes!
+```cpp
+#version 330 core
+
+in vec3 color;
+
+out vec4 FragColor;
+
+void main() {
+	FragColor = vec4(color, 1.0f);
+}
+```
+What this does is pass our imported color information into the output display as the final color!
+
+## Interleaving Data
+Ok! Now we understand a little bit about shaders and what they do, let's talk about a concept called **interleaving data**. This essentially means grouping different pieces of data used for different things in the same array or structure. This prevents us from having to define new **buffer** objects for the same vertices to store different information.
+
+If we go back to **main.cpp** we can demonstrate this! We can add 3 extra values for each vertex, representing the RGB coloring. Feel free to choose whatever values you'd like!
+```cpp
+GLfloat vertices[] = {
+	 -0.5f, -0.5f * float(sqrt(3)) * 1 / 3, 0.0f, 0.8f, 0.3f,  0.02f,
+	 0.5f, -0.5f * float(sqrt(3)) * 1 / 3, 0.0f, 0.8f, 0.3f,  0.02f,
+	 0.0f,  0.5f * float(sqrt(3)) * 2 / 3, 0.0f, 1.0f, 0.6f,  0.32f,
+	 -0.25f, 0.5f * float(sqrt(3)) * 1 / 6, 0.0f, 0.9f, 0.45f, 0.17f,
+	 0.25f, 0.5f * float(sqrt(3)) * 1 / 6, 0.0f, 0.9f, 0.45f, 0.17f,
+	 0.0f, -0.5f * float(sqrt(3)) * 1 / 3, 0.0f, 0.8f, 0.3f,  0.02f
+};
+```
+As you can see, now we have position and color information interspersed in our vertex array. It goes by the format `x1, y1, z1, r1, g1, b1, x2, y2, ...`.
+
+Now this is cool, but we have no real way to find separate out this information when reading it at the moment. So let's navigate to `VAO.h` and modify the `LinkVBO()` method to support this.
+
+First, let's rename it to something more fitting, like `LinkAttrib()` and add som parameters so we can parse this, specifically `numComponents`, `type`, and `offset`.
+```cpp
+void LinkAttrib(VBO& VBO, GLuint layout, GLuint numComponents, GLenum type, GLsizeiptr stride, void* offset);
+```
+
+Now, if we navigate to `VAO.cpp` we can change the method definition, and pass in our new parameters to `glVertexAttribPointer()`.
+```cpp
+void VAO::LinkAttrib(VBO& VBO, GLuint layout, GLuint numComponents, GLenum type, GLsizeiptr stride, void* offset) {
+	VBO.Bind();
+	glVertexAttribPointer(layout, numComponents, type, GL_FALSE, stride, offset);
+	glEnableVertexAttribArray(layout);
+	VBO.Unbind();
+}
+```
+
+All there's left to do is to use these new parameters to define our locations!
+Let's navigate to `main.cpp` and replace `vao.LinkVBO(vbo, 0)` with:
+```cpp
+vao.LinkAttrib(vbo, 0, 3, GL_FLOAT, 6 * sizeof(float), (void*)0);
+vao.LinkAttrib(vbo, 1, 3, GL_FLOAT, 6 * sizeof(float), (void*)(sizeof(float) * 3));
+```
