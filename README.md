@@ -1290,5 +1290,5 @@ glUniform1f(scaleID, 0.5f);
 If we run this you will find that our triangles are now slightly bigger, and this was all controlled from our `main.cpp` file!
 
 <p align="center">
-  <img src="images/5/Final-Shader-Triangle.png" alt="Final Uniform Triangle" width="500" height="auto"/>
+  <img src="images/5/Final-Uniform-Triangle.png" alt="Final Uniform Triangle" width="500" height="auto"/>
 </p>
