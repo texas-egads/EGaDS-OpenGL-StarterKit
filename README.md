@@ -1214,7 +1214,11 @@ GLfloat vertices[] = {
 	 0.0f, -0.5f * float(sqrt(3)) * 1 / 3, 0.0f, 0.8f, 0.3f,  0.02f
 };
 ```
-As you can see, now we have position and color information interspersed in our vertex array. It goes by the format `x1, y1, z1, r1, g1, b1, x2, y2, ...`.
+Now we have position and color information interspersed in our vertex array. It goes by the format `x1, y1, z1, r1, g1, b1, x2, y2, ...`. The distance between a relevant piece of data and the next vertex's information of the same type is called the **stride**, while the distance from position `0` to the first item of the data is called the **offset**. In the diagram below, the offset is three times the size of a float in bytes!
+
+<p align="center">
+  <img src="images/5/Stride-Offset.png" alt="Stride Offset" width="500" height="auto"/>
+</p>
 
 Now this is cool, but we have no real way to find separate out this information when reading it at the moment. So let's navigate to `VAO.h` and modify the `LinkVBO()` method to support this.
 
@@ -1239,3 +1243,10 @@ Let's navigate to `main.cpp` and replace `vao.LinkVBO(vbo, 0)` with:
 vao.LinkAttrib(vbo, 0, 3, GL_FLOAT, 6 * sizeof(float), (void*)0);
 vao.LinkAttrib(vbo, 1, 3, GL_FLOAT, 6 * sizeof(float), (void*)(sizeof(float) * 3));
 ```
+
+Now, if we compile and run, you will find a nice-looking gradient of our colors from the vertices! Looks beautiful, no?
+
+<p align="center">
+  <img src="images/5/Final-Shader-Triangle.png" alt="Final Shader Triangle" width="500" height="auto"/>
+</p>
+
