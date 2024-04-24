@@ -760,3 +760,365 @@ And now we if we build and run, you can see we have 3 separate triangles that ha
 <p align="center">
   <img src="images/4/Final-Element-Triangle.png" alt="Final Element Triangle" width="500" height="auto"/>
 </p>
+
+# Organizing
+## Shaders
+Now since our **main.cpp** is getting a little long, let's organize some of our functionality into separate files.
+
+First if you have not created it already, create the directory `res/shaders` in the project root directory. Now let's create 2 shader files: `default.vert` and `default.frag`. These are going to be our vertex shader and frament shader respectively!
+
+```glsl
+#version 330 core
+
+layout (location = 0) in vec3 aPos;
+
+void main() {
+   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
+}
+```
+
+```glsl
+#version 330 core
+
+layout (location = 0) in vec3 aPos;
+
+void main() {
+   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
+}
+```
+
+Now, let's create a header file called `shader.h` in our `src` directory. At the top we will write `#pragma once`. This prevents our header file from being included more than once in the current project, as that would be redundant. This is very typical to include at the top of header files.
+
+Additionlly, let's include some libraries that will help use parse the shader files we just created!
+```cpp
+#pragma once
+
+#include <string>
+#include <fstream>
+#include <sstream>
+#include <iostream>
+#include <cerrno>
+#include "glad/glad.h"
+```
+
+Next we can declare a function that will help us parse the shader files and load them into our shader objects as `strings`.
+```cpp
+std::string get_file_contents(const char* filename);
+```
+
+Now let's declare the shader class that will essentially be our **OpenGL** shader, but wrapped up in a nice object format for ease of use!
+
+We can create a member variable for our shader ID and establish a constructor that will take in the vertex and fragment shader source files. 
+
+We can also declare `Activate()` and `Delete()` functions to bind and unbind the shader in **OpenGL**.
+```cpp
+class Shader {
+public:
+	GLuint ID;
+	Shader(const char* vertexFile, const char* fragmentFile);
+
+	void Activate();
+	void Delete();
+};
+```
+
+Now let's create `shader.cpp` in our `src` directory! And include the `shader.h` file we just created!
+```cpp
+#include "shader.h"
+```
+
+Then we can define our `get_file_contents()` function that will return the shader source code from the file as a `string`. If you are more curious about this step I would look further into file parsing in **C** and **C++**
+```cpp
+std::string get_file_contents(const char* filename) {
+	std::ifstream in(filename, std::ios::binary);
+	if (in) {
+		std::string contents;
+		in.seekg(0, std::ios::end);
+		contents.resize(in.tellg());
+		in.seekg(0, std::ios::beg);
+		in.read(&contents[0], contents.size());
+		in.close();
+		return(contents);
+	}
+	throw(errno);
+}
+```
+
+Now let's define the constructor for our `Shader` class. This is going to be taking in the two file names and setting them up in **OpenGL**
+```cpp
+Shader::Shader(const char* vertexFile, const char* fragmentFile) {
+	
+}
+```
+
+Inside this constructor, we can first use our parsing function from earlier and grab our strings from the file as `c_str` or character arrays! 
+```cpp
+std::string vertexCode = get_file_contents(vertexFile);
+std::string fragmentCode = get_file_contents(fragmentFile);
+
+const char* vertexSource = vertexCode.c_str();
+const char* fragmentSource = fragmentCode.c_str();
+```
+
+From here we can just copy paste what we did in **main.cpp** over and it should be all set up! 
+```cpp
+Shader::Shader(const char* vertexFile, const char* fragmentFile) {
+    std::string vertexCode = get_file_contents(vertexFile);
+    std::string fragmentCode = get_file_contents(fragmentFile);
+
+    const char* vertexShaderSource = vertexCode.c_str();
+    const char* fragmentShaderSource = fragmentCode.c_str();
+
+    GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+    glCompileShader(vertexShader);
+
+    GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+    glCompileShader(fragmentShader);
+
+    ID = glCreateProgram();
+    glAttachShader(ID, vertexShader);
+    glAttachShader(ID, fragmentShader);
+    glLinkProgram(ID);
+
+    glDeleteShader(vertexShader);
+    glDeleteShader(fragmentShader);
+}
+```
+
+Now we can also implement `Activate()` and `Delete()`. These will just use **OpenGL**'s `glUseProgram()` and `glDeleteProgram()` respectively!
+```cpp
+void Shader::Activate() {
+  glUseProgram(ID);
+}
+
+void Shader::Delete() {
+  glDeleteProgram(ID);
+}
+```
+## VBOs
+Similarly, let's organize our VBOs! We can create a new header file called `VBO.h` and once again write `#pragma once` and include `glad/glad.h` for **OpenGL** functionality!
+```cpp
+#pragma once
+
+#include<glad/glad.h>
+```
+
+Ok cool! We can now declare our VBO class. This is once again going to have a `GLuint` ID and a constructor. Notice that the size is of the type `GLsizeiptr`. This is the type that is used when creating a VBO, so let's just have the constructor use that!
+
+We also want to provide some useful functionality for the VBO, so let's declare `Bind()`, `Unbind()`, and `Delete()` methods.
+```cpp
+class VBO {
+public:
+	GLuint ID;
+	VBO(GLfloat* vertices, GLsizeiptr size);
+
+	void Bind();
+	void Unbind();
+	void Delete();
+};
+```
+
+Cool we can now create a `VBO.cpp` file and fill in the functionality of the constructor and these methods similar to how we did it in **main.cpp**
+```cpp
+#include "VBO.h"
+
+VBO::VBO(GLfloat* vertices, GLsizeiptr size) {
+	glGenBuffers(1, &ID);
+	glBindBuffer(GL_ARRAY_BUFFER, ID);
+	glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
+}
+
+void VBO::Bind() {
+	glBindBuffer(GL_ARRAY_BUFFER, ID);
+}
+
+void VBO::Unbind() {
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void VBO::Delete() {
+	glDeleteBuffers(1, &ID);
+}
+```
+
+## EBOs
+
+Awesome! Now we can do the same thing with EBOs. Create `EBO.h` and `EBO.cpp` files and copy over everything from `VBO.h` and `VBO.cpp`. Now just replace every `VBO` with `EBO` and every `GL_ARRAY_BUFFER` with `GL_ELEMENT_BUFFER` as a flag.
+```cpp
+#pragma once
+
+#include "glad/glad.h"
+
+class EBO {
+public:
+	GLuint ID;
+	EBO(GLuint* indices, GLsizeiptr size);
+
+	void Bind();
+	void Unbind();
+	void Delete();
+};
+```
+```cpp
+#include "EBO.h"
+
+EBO::EBO(GLuint* indices, GLsizeiptr size) {
+	glGenBuffers(1, &ID);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ID);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices, GL_STATIC_DRAW);
+}
+
+void EBO::Bind() {
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ID);
+}
+
+void EBO::Unbind() {
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
+void EBO::Delete() {
+	glDeleteBuffers(1, &ID);
+}
+```
+
+## VAOs
+
+Now finally, we can make a vertex array class. Create a `VAO.h` and a `VAO.cpp` file.
+
+In `VAO.h` include **glad** and `VBO.h`. Now we can define our ID and constructor, as well as functionality for linking VBOs to the VAO with a `GLuint` layout ID. 
+```cpp
+#pragma once
+
+#include "glad/glad.h"
+#include "VBO.h"
+
+class VAO {
+public:
+	GLuint ID;
+	VAO();
+
+	void LinkVBO(VBO& VBO, GLuint layout);
+	void Bind();
+	void Unbind();
+	void Delete();
+};
+```
+
+Cool! Let's implement these! For that all we need to do is copy over some of the VAO functionality from our **main.cpp** file. This time, we can use our **VBO** `Bind()` method though, since we included `VBO.h` in `VAO.h`!
+```cpp
+#include "VAO.h"
+
+VAO::VAO() {
+	glGenVertexArrays(1, &ID);
+}
+
+void VAO::LinkVBO(VBO& VBO, GLuint layout) {
+	VBO.Bind();
+	glVertexAttribPointer(layout, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	glEnableVertexAttribArray(layout);
+	VBO.Unbind();
+}
+
+void VAO::Bind() {
+	glBindVertexArray(ID);
+}
+
+void VAO::Unbind() {
+	glBindVertexArray(0);
+}
+
+void VAO::Delete() {
+	glDeleteVertexArrays(1, &ID);
+}
+```
+
+## Cleaning up main.cpp
+
+Nice! We are getting close! All that is left to do is to modify our **main.cpp** file to use all these new abstractions we have created!
+
+The result should look something like this! Look how much cleaner it looks!
+```cpp
+#include<iostream>
+#include <math.h>
+#include "glad/glad.h"
+#include "GLFW/glfw3.h"
+
+#include "VAO.h"
+#include "VBO.h"
+#include "EBO.h"
+#include "shader.h"
+
+GLfloat vertices[] = {
+  -0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,
+  0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,
+  0.0f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f, 	
+  -0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f, 	
+  0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f, 	
+  0.0f, -0.5f * float(sqrt(3)) / 3, 0.0f, 	
+};
+
+GLuint indices[] = {
+  0, 3, 5,
+  3, 2, 4,
+  5, 4, 1,
+};
+
+int main(void) {
+	glfwInit();
+
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+	GLFWwindow* window = glfwCreateWindow(800, 800, "EGaDS OpenGL Starter Kit", NULL, NULL);
+  if (window == NULL) {
+		std::cout << "Failed to create GLFW window" << std::endl;
+		glfwTerminate();
+		return -1;
+	}
+	glfwMakeContextCurrent(window);
+
+	gladLoadGL();
+	glViewport(0, 0, 800, 800);
+
+  Shader shaderProgram("default.vert", "default.frag");
+
+  VAO vao;
+  vao.Bind();
+
+  VBO vbo(vertices, sizeof(vertices));
+  EBO ebo(indices, sizeof(indices));
+
+	vao.LinkVBO(vbo, 0);
+	vao.Unbind();
+	vbo.Unbind();
+	ebo.Unbind();
+
+	while (!glfwWindowShouldClose(window)) {
+		glClearColor(0.07f, 0.28f, 0.55f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+		shaderProgram.Activate();
+		vao.Bind();
+		glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
+		glfwSwapBuffers(window);
+		glfwPollEvents();
+	}
+
+  vao.Delete();
+  vbo.Delete();
+  ebo.Delete();
+  shaderProgram.Delete();
+
+	glfwDestroyWindow(window);
+	glfwTerminate();
+	return 0;
+}
+```
+
+Also when we build and run, it runs just the same!
+
+<p align="center">
+  <img src="images/4/Final-Element-Triangle.png" alt="Final Element Triangle" width="500" height="auto"/>
+</p>
