@@ -24,7 +24,7 @@ add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})
 # We need a CMAKE_DIR with some code to find external dependencies
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
-# Look for the packages that we need! #
+# LOOK for the packages that we need! #
 
 # OpenGL
 set(OpenGL_GL_PREFERENCE GLVND)
@@ -90,3 +90,6 @@ if(WIN32)
 		"${PROJECT_SOURCE_DIR}/dlls"
 		$<TARGET_FILE_DIR:${PROJECT_NAME}>)
 endif()
+
+# Copy res folder recursively into the build directory
+file(COPY ${CMAKE_SOURCE_DIR}/res DESTINATION ${CMAKE_BINARY_DIR})
