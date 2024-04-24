@@ -1534,3 +1534,5 @@ So now our dog is correctly flipped and happy!
 <p align="center">
   <img src="images/6/Final-Dog.png" alt="Final Dog" width="500" height="auto"/>
 </p>
+
+It's kind of ridiculous that we did all this work programming, and it's all for the purpose of sharing your dog pictures...
