@@ -1051,18 +1051,18 @@ The result should look something like this! Look how much cleaner it looks!
 #include "shader.h"
 
 GLfloat vertices[] = {
-  -0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,
-  0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,
-  0.0f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f, 	
-  -0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f, 	
-  0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f, 	
-  0.0f, -0.5f * float(sqrt(3)) / 3, 0.0f, 	
+	-0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,
+  	0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,
+  	0.0f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f, 	
+	-0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f, 	
+  	0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f, 	
+  	0.0f, -0.5f * float(sqrt(3)) / 3, 0.0f, 	
 };
 
 GLuint indices[] = {
-  0, 3, 5,
-  3, 2, 4,
-  5, 4, 1,
+  	0, 3, 5,
+  	3, 2, 4,
+  	5, 4, 1,
 };
 
 int main(void) {
@@ -1073,7 +1073,7 @@ int main(void) {
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	GLFWwindow* window = glfwCreateWindow(800, 800, "EGaDS OpenGL Starter Kit", NULL, NULL);
-  if (window == NULL) {
+	if (window == NULL) {
 		std::cout << "Failed to create GLFW window" << std::endl;
 		glfwTerminate();
 		return -1;
@@ -1083,13 +1083,13 @@ int main(void) {
 	gladLoadGL();
 	glViewport(0, 0, 800, 800);
 
-  Shader shaderProgram("default.vert", "default.frag");
+	Shader shaderProgram("res/shaders/default.vert", "res/shaders/default.frag");
 
-  VAO vao;
-  vao.Bind();
+  	VAO vao;
+  	vao.Bind();
 
-  VBO vbo(vertices, sizeof(vertices));
-  EBO ebo(indices, sizeof(indices));
+	VBO vbo(vertices, sizeof(vertices));
+  	EBO ebo(indices, sizeof(indices));
 
 	vao.LinkVBO(vbo, 0);
 	vao.Unbind();
@@ -1106,10 +1106,10 @@ int main(void) {
 		glfwPollEvents();
 	}
 
-  vao.Delete();
-  vbo.Delete();
-  ebo.Delete();
-  shaderProgram.Delete();
+  	vao.Delete();
+  	vbo.Delete();
+  	ebo.Delete();
+  	shaderProgram.Delete();
 
 	glfwDestroyWindow(window);
 	glfwTerminate();
