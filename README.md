@@ -1391,7 +1391,7 @@ Now the library we are going to use to load our texture is called **stb_image**.
 The image I have specifically selected for this is a square image of this puppy of size `512x512`. Dimensions of a power of `2` are generally going to perform better, but it really isn't important, use whatever image you want! Our vertices do define a square, however, so I would recommend using a square image to keep the aspect ratio if you used my coordinates!
 
 <p align="center">
-  <img src="images/6/dog.png" alt="Dog" width="500" height="auto"/>
+  <img src="images/6/Dog.png" alt="Dog" width="500" height="auto"/>
 </p>
 
 In our `main.cpp` file, let's define some integers to store our image width, height, and the number of color channels. Since this is a PNG file, it should have 4 color channels for RGBA.
