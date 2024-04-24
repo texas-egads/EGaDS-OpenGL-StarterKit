@@ -1292,3 +1292,61 @@ If we run this you will find that our triangles are now slightly bigger, and thi
 <p align="center">
   <img src="images/5/Final-Uniform-Triangle.png" alt="Final Uniform Triangle" width="500" height="auto"/>
 </p>
+
+One little thing, let's set up a small error checking method just to make sure our **shader** compiles correctly. We are doing this in runtime so it is better to know if we have a typo in our **shader** file or something!
+
+In `shader.h` and `shader.cpp` respectively, we can add a method called `checkCompileErrors()` that will do exactly that!
+```cpp
+void checkCompileErrors(unsigned int shader, const char* type);
+```
+
+```cpp
+void Shader::checkCompileErrors(unsigned int shader, const char* type) {
+	GLint hasCompiled;
+	char infoLog[1024];
+	if (std::strncmp(type, "PROGRAM", 7)) {
+		glGetShaderiv(shader, GL_COMPILE_STATUS, &hasCompiled);
+		if (hasCompiled == GL_FALSE) {
+			glGetShaderInfoLog(shader, 1024, NULL, infoLog);
+			std::cout << "SHADER_COMPILATION_ERROR for:" << type << "\n" << infoLog << std::endl;
+		}
+	}
+	else {
+		glGetProgramiv(shader, GL_LINK_STATUS, &hasCompiled);
+		if (hasCompiled == GL_FALSE) {
+			glGetProgramInfoLog(shader, 1024, NULL, infoLog);
+			std::cout << "SHADER_LINKING_ERROR for:" << type << "\n" << infoLog << std::endl;
+		}
+	}
+}
+```
+
+Now in the **shader**'s constructor, let's add these error checks to make sure everything is ok!
+```cpp
+Shader::Shader(const char* vertexFile, const char* fragmentFile) {
+  std::string vertexCode = get_file_contents(vertexFile);
+  std::string fragmentCode = get_file_contents(fragmentFile);
+
+  const char* vertexShaderSource = vertexCode.c_str();
+  const char* fragmentShaderSource = fragmentCode.c_str();
+
+  GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+  glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+  glCompileShader(vertexShader);
+  checkCompileErrors(vertexShader, "VERTEX");
+
+  GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+  glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+  glCompileShader(fragmentShader);
+  checkCompileErrors(fragmentShader, "FRAGMENT");
+
+  ID = glCreateProgram();
+  glAttachShader(ID, vertexShader);
+  glAttachShader(ID, fragmentShader);
+  glLinkProgram(ID);
+  checkCompileErrors(ID, "PROGRAM");
+
+  glDeleteShader(vertexShader);
+  glDeleteShader(fragmentShader);
+}
+```
