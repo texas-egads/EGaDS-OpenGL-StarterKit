@@ -442,7 +442,7 @@ glDrawArrays(GL_TRIANGLES, 0, 3);
 At this point, your `main.cpp` should look something like what I have below. It looks a little messy, which is why we will clean it up later. But now we should have everything we need to draw a triangle to the screen!
 ```cpp
 #include<iostream>
-#include <tgmath.h>
+#include <math.h>
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 
@@ -645,7 +645,7 @@ glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
 Awesome! Now you're done. If you're a bit lost at this point, the final code for `main.cpp` should look like this!
 ```cpp
 #include<iostream>
-#include <tgmath.h>
+#include <math.h>
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 
