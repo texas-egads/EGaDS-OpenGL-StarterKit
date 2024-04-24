@@ -1391,11 +1391,146 @@ Now the library we are going to use to load our texture is called **stb_image**.
 The image I have specifically selected for this is a square image of this puppy of size `512x512`. Dimensions of a power of `2` are generally going to perform better, but it really isn't important, use whatever image you want! Our vertices do define a square, however, so I would recommend using a square image to keep the aspect ratio if you used my coordinates!
 
 <p align="center">
-  <img src="images/6/dog.png" alt="Dog" width="500" height="auto"/>
+  <img src="images/6/Dog.png" alt="Dog" width="500" height="auto"/>
 </p>
 
 In our `main.cpp` file, let's define some integers to store our image width, height, and the number of color channels. Since this is a PNG file, it should have 4 color channels for RGBA.
 We can then load our PNG file into a character array with `stbi_load()`
 ```cpp
-
+  int imgWidth, imgHeight, numChannels;
+  unsigned char* bytes = stbi_load("res/textures/dog.png", &imgWidth, &imgHeight, &numChannels, 0);
 ```
+
+Next, we can create a `GLuint` to store the an **OpenGL** texture ID. Then, we can use `glGenTextures()` to generate the texture in memory and activate the `0` texture slot in **OpenGL** with `glActiveTexture()`. Then, we can bind the texture using `glBindTexture()`.
+```cpp
+GLuint texture;
+glGenTextures(1, &texture);
+glActiveTexture(GL_TEXTURE0);
+glBindTexture(GL_TEXTURE_2D, texture);
+```
+
+One thing to note is that **OpenGL** has a number of texture slots, which allows it to render multiple textures with 1 draw call. This can then be used for batched rendering, which significantly lowers the number of draw calls per frame and drastically improves performance. Almost all GPUs can store at least `8` textures, with many able to store `16`.
+
+<p align="center">
+  <img src="images/6/Texture-Slots.png" alt="Texture Slots" width="500" height="auto"/>
+</p>
+
+Next we can adjust some of the parameters of the textures. `GL_TEXTURE_MIN_FILTER` and `GL_TEXTURE_MAG_FILTER` defines the algorithm that will be used to scale down or up. `GL_NEAREST` in this case directly scales it while `GL_LINEAR` will linearly interpolate to keep the image quality. For our purposes, `GL_NEAREST` should be fine! `GL_TEXTURE_WRAP_S` and `GL_TEXTURE_WRAP_T` define how the image behaves when it's texture coordinates go beyond the vertex coordinates. In this case we defined `GL_REPEAT` to let it know that it can tile the image if it runs out for information!
+```cpp
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+```
+
+Now let's load in the image byte information by passing in our image parameters from earlier. Note that I am using `GL_RGB` instead of `GL_RGBA` because I manually converted my image from a JPG, which contains three color channels instead of four even after converting. If you use another PNG file you should use `GL_RGBA`. Afterwards, we can generate mipmaps for the texture.
+```cpp
+glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imgWidth, imgHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, bytes);
+glGenerateMipmap(GL_TEXTURE_2D);
+```
+
+Now to clean up, it is good practice to clean up our byte information and unbind the texture!
+```cpp
+stbi_image_free(bytes);
+glBindTexture(GL_TEXTURE_2D, 0);
+```
+Also we can delete the texture at the end of our application after exiting the loop!
+```cpp
+vao.Delete();
+vbo.Delete();
+ebo.Delete();
+glDeleteTextures(1, &texture);
+shaderProgram.Delete();
+```
+
+Cool! Now let's add another group of information that represents the texture coordinates. This will contain two floats per vertex for texture mapping!
+```cpp
+GLfloat vertices[] = {
+	-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+	-0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+	0.5f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+	0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f
+};
+```
+
+Next, we need to reformat our **VAO** to account for this!
+```cpp
+vao.LinkAttrib(vbo, 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0);
+vao.LinkAttrib(vbo, 1, 3, GL_FLOAT, 8 * sizeof(float), (void*)(sizeof(float) * 3));
+vao.LinkAttrib(vbo, 2, 2, GL_FLOAT, 8 * sizeof(float), (void*)(sizeof(float) * 6)); 
+```
+
+Cool! Now we have to modify our **shaders** to use this texture! Open up our **vertex shader** and add another slot for the texture coordinates! Then we can just pass it through our **vertex shader** and directly export it to the **fragment shader**. 
+```glsl
+#version 330 core
+
+layout (location = 0) in vec3 aPos;
+layout (location = 1) in vec3 aColor;
+layout (location = 2) in vec2 aTex;
+
+out vec3 color;
+out vec2 texCoord;
+uniform float scale;
+
+void main() {
+	gl_Position = vec4(aPos.x + aPos.x * scale, aPos.y + aPos.y * scale, aPos.z + aPos.z * scale, 1.0);
+	color = aColor;
+  	texCoord = aTex;
+}
+```
+
+Now let's open our **fragment shader** and use the texture coordinates. For this, we can create a new uniform called `tex0`. This is going to be what points our GPU to texture slot `0` and directs it to our **OpenGL** texture! This uniform will have the type `sampler2D` which is essentially just an `int` that is used for textures. In the `main()` function, we can map `tex0` with our imported texture coordinates to map these!
+```cpp
+#version 330 core
+
+in vec3 color;
+in vec2 texCoord;
+
+out vec4 FragColor;
+
+uniform sampler2D tex0;
+
+void main() {
+	FragColor = texture(tex0, texCoord);
+}
+```
+
+Awesome! Now our shaders are set up! Let's head back to `main.cpp` and use the same syntax from the last section to grab the uniform location! Make sure to activate the shader before uploading any information though!
+```cpp
+GLuint tex0ID = glGetUniformLocation(shaderProgram.ID, "tex0");
+shaderProgram.Activate();
+glUniform1i(tex0ID, 0);
+```
+
+Now all that's left to do is to bind the texture in the main loop!
+```cpp
+while (!glfwWindowShouldClose(window)) {
+	glClearColor(0.07f, 0.28f, 0.55f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+	shaderProgram.Activate();
+	glUniform1f(scaleID, 0.5f);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	vao.Bind();
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	glfwSwapBuffers(window);
+	glfwPollEvents();
+}
+```
+
+If we compile and run, we will see our cute dog picture! But wait, it's upside down!
+
+<p align="center">
+  <img src="images/6/Final-Dog-Inverted.png" alt="Final Dog Inverted" width="500" height="auto"/>
+</p>
+
+This happens because OpenGL loads its texture coordinates from the `bottom left` at `(0, 0)` while `stb` loads the image from the `top left`. This makes the resulting image upside down. No worries though, all we need to do is call `stbi_set_flip_vertically_on_load()` to flip the imported image so it is flipped when loaded into bytes!
+```cpp
+stbi_set_flip_vertically_on_load(true);
+```
+
+So now our dog is correctly flipped and happy!
+
+<p align="center">
+  <img src="images/6/Final-Dog.png" alt="Final Dog" width="500" height="auto"/>
+</p>
