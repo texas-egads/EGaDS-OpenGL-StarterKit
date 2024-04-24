@@ -1214,7 +1214,7 @@ GLfloat vertices[] = {
 	 0.0f, -0.5f * float(sqrt(3)) * 1 / 3, 0.0f, 0.8f, 0.3f,  0.02f
 };
 ```
-Now we have position and color information interspersed in our vertex array. It goes by the format `x1, y1, z1, r1, g1, b1, x2, y2, ...`. The distance between a relevant piece of data and the next vertex's information of the same type is called the **stride**, while the distance from position `0` to the first item of the data is called the **offset**. In the diagram below, the offset is three times the size of a float in bytes!
+Now we have position and color information interspersed in our vertex array. It goes by the format `x1, y1, z1, r1, g1, b1, x2, y2, ...` The distance between a relevant piece of data and the next vertex's information of the same type is called the **stride**, while the distance from position `0` to the first item of the data is called the **offset**. In the diagram below, the offset is three times the size of a float in bytes!
 
 <p align="center">
   <img src="images/5/Stride-Offset.png" alt="Stride Offset" width="500" height="auto"/>
