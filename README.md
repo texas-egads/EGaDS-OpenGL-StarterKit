@@ -32,7 +32,7 @@ Now navigate to the local repository's main project folder and run these command
   make
   ./EGaDS-OpenGL-StarterKit
 ```
-The last command should do nothing since the `main.cpp` file in the template just returns 0. So you are good to go!
+The last command should do nothing since the `main.cpp` file in the template just returns `0`. So you are good to go!
 
 ## For Windows
 **Install Visual Studio**: If you haven't already, download and install Visual Studio from the [official website](https://visualstudio.microsoft.com/).
