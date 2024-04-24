@@ -32,7 +32,7 @@ Now navigate to the local repository's main project folder and run these command
   make
   ./EGaDS-OpenGL-StarterKit
 ```
-The last command should do nothing since the **main.cpp** file in the template just returns 0. So you are good to go!
+The last command should do nothing since the `main.cpp` file in the template just returns 0. So you are good to go!
 
 ## For Windows
 **Install Visual Studio**: If you haven't already, download and install Visual Studio from the [official website](https://visualstudio.microsoft.com/).
@@ -56,7 +56,7 @@ The last command should do nothing since the **main.cpp** file in the template j
 Now that we have our project ready to go, let's start by creating a window. For that, we will be using the **GLFW** library.
 
 ## Setting up GLFW
-We can start by including **GLFW** and **GLAD** at the top of our **main.cpp** file, and let's include **iostream** as well!
+We can start by including **GLFW** and **GLAD** at the top of our `main.cpp` file, and let's include **iostream** as well!
 ```cpp
 #include <iostream>
 #include "glad/glad.h"
@@ -109,7 +109,7 @@ Then at the end of our application, we can destroy our window and terminate **GL
 glfwDestroyWindow(window);
 glfwTerminate();
 ```
-Now your **main.cpp** file should look something like this!
+Now your `main.cpp` file should look something like this!
 ```cpp
 #include <iostream>
 #include "glad/glad.h"
@@ -195,7 +195,7 @@ So let's implement this buffer swapping in our **C++** application! **OpenGL** a
 glfwSwapBuffers(window);
 ```
 
-Our resulting **main.cpp** file should now look like this!
+Our resulting `main.cpp` file should now look like this!
 ```cpp
 #include<iostream>
 #include<GLFW/glfw3.h>
@@ -439,7 +439,7 @@ Then, once those are set up, we can finally call `glDrawArrays()`, which will be
 glDrawArrays(GL_TRIANGLES, 0, 3);
 ```
 
-At this point, your **main.cpp** should look something like what I have below. It looks a little messy, which is why we will clean it up later. But now we should have everything we need to draw a triangle to the screen!
+At this point, your `main.cpp` should look something like what I have below. It looks a little messy, which is why we will clean it up later. But now we should have everything we need to draw a triangle to the screen!
 ```cpp
 #include<iostream>
 #include <tgmath.h>
@@ -642,7 +642,7 @@ Now, let's draw the elements that we described earlier with our vertices and ind
 glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
 ```
 
-Awesome! Now you're done. If you're a bit lost at this point, the final code for **main.cpp** should look like this!
+Awesome! Now you're done. If you're a bit lost at this point, the final code for `main.cpp` should look like this!
 ```cpp
 #include<iostream>
 #include <tgmath.h>
@@ -763,7 +763,7 @@ And now we if we build and run, you can see we have 3 separate triangles that ha
 
 # Organizing
 ## Shaders
-Now since our **main.cpp** is getting a little long, let's organize some of our functionality into separate files.
+Now since our `main.cpp` is getting a little long, let's organize some of our functionality into separate files.
 
 First if you have not created it already, create the directory `res/shaders` in the project root directory. Now let's create 2 shader files: `default.vert` and `default.frag`. These are going to be our vertex shader and frament shader respectively!
 
@@ -860,7 +860,7 @@ const char* vertexSource = vertexCode.c_str();
 const char* fragmentSource = fragmentCode.c_str();
 ```
 
-From here we can just copy paste what we did in **main.cpp** over and it should be all set up! 
+From here we can just copy paste what we did in `main.cpp` over and it should be all set up! 
 ```cpp
 Shader::Shader(const char* vertexFile, const char* fragmentFile) {
     std::string vertexCode = get_file_contents(vertexFile);
@@ -920,7 +920,7 @@ public:
 };
 ```
 
-Cool we can now create a `VBO.cpp` file and fill in the functionality of the constructor and these methods similar to how we did it in **main.cpp**
+Cool we can now create a `VBO.cpp` file and fill in the functionality of the constructor and these methods similar to how we did it in `main.cpp`
 ```cpp
 #include "VBO.h"
 
@@ -1006,7 +1006,7 @@ public:
 };
 ```
 
-Cool! Let's implement these! For that all we need to do is copy over some of the VAO functionality from our **main.cpp** file. This time, we can use our **VBO** `Bind()` method though, since we included `VBO.h` in `VAO.h`!
+Cool! Let's implement these! For that all we need to do is copy over some of the VAO functionality from our `main.cpp` file. This time, we can use our **VBO** `Bind()` method though, since we included `VBO.h` in `VAO.h`!
 ```cpp
 #include "VAO.h"
 
@@ -1036,7 +1036,7 @@ void VAO::Delete() {
 
 ## Cleaning up main.cpp
 
-Nice! We are getting close! All that is left to do is to modify our **main.cpp** file to use all these new abstractions we have created!
+Nice! We are getting close! All that is left to do is to modify our `main.cpp` file to use all these new abstractions we have created!
 
 The result should look something like this! Look how much cleaner it looks!
 ```cpp
@@ -1203,7 +1203,7 @@ What this does is pass our imported color information into the output display as
 ## Interleaving Data
 Ok! Now we understand a little bit about shaders and what they do, let's talk about a concept called **interleaving data**. This essentially means grouping different pieces of data used for different things in the same array or structure. This prevents us from having to define new **buffer** objects for the same vertices to store different information.
 
-If we go back to **main.cpp** we can demonstrate this! We can add 3 extra values for each vertex, representing the RGB coloring. Feel free to choose whatever values you'd like!
+If we go back to `main.cpp` we can demonstrate this! We can add 3 extra values for each vertex, representing the RGB coloring. Feel free to choose whatever values you'd like!
 ```cpp
 GLfloat vertices[] = {
 	 -0.5f, -0.5f * float(sqrt(3)) * 1 / 3, 0.0f, 0.8f, 0.3f,  0.02f,
